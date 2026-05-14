@@ -1,0 +1,375 @@
+{
+  "home": {
+    "title": "Daily Trivia",
+    "banner": "",
+    "webTitle": "Daily Trivia: 5 Fun, Handpicked Questions for Curious Minds",
+    "webDescription": "Play today's daily trivia with five handpicked questions across multiple categories, plus answers, explanations, and a full archive.",
+    "keywords": "daily trivia, today's trivia, daily quiz, trivia question of the day, daily trivia questions and answers, handpicked trivia, free online trivia"
+  },
+  "hero": {
+    "title": "Daily Trivia for Curious Minds",
+    "description": "Five handpicked questions across multiple categories, designed to spark curiosity.",
+    "emptyTitle": "Today’s trivia is not ready yet.",
+    "emptyDescription": "The daily set has not been scheduled for the current UTC date yet. Check back soon or browse an earlier day from the archive.",
+    "archive": {
+      "title": "Archive",
+      "description": "Explore previous Daily Trivia quizzes, revisit handpicked trivia questions, and open the full set for any archived day.",
+      "completed": "Completed",
+      "incompleteOnly": "Hide complete days",
+      "empty": "All archived days are completed. Turn off the filter to browse the full archive again."
+    }
+  },
+  "quiz": {
+    "session": {
+      "progressLabel": "Answer all five questions to unlock the report.",
+      "questionLabel": "Question",
+      "correctLabel": "Correct",
+      "categoryLabel": "Category",
+      "explanationLabel": "Explanation",
+      "correctState": "Correct.",
+      "incorrectState": "Incorrect. Correct answer:",
+      "nextQuestion": "Next question",
+      "viewReport": "View report"
+    },
+    "report": {
+      "eyebrow": "Curiosity unlocked",
+      "title": "Nice work. You followed your curiosity through this trivia set.",
+      "copyPerfect": "You got {score}. A clean sweep. The full review is right below.",
+      "copyStrong": "You got {score}. The full review is right below.",
+      "copyNice": "You got {score}. The full review is right below.",
+      "reviewTitle": "Question review",
+      "showWrongOnly": "Show wrong only",
+      "showAll": "Show all",
+      "share": "Share",
+      "copied": "Copied",
+      "retry": "Retry"
+    }
+  },
+  "archive": {
+    "detail": {
+      "backToArchive": "Back to  archive",
+      "previousDay": "Previous day",
+      "previousDayShort": "Previous: Day {day}",
+      "nextDayShort": "Next: Day {day}",
+      "noPreviousDay": "No earlier archive is available.",
+      "noNextDay": "No later archive is available."
+    },
+    "metadata": {
+      "archiveTitle": "Daily Trivia Archive Day {day} · {date}",
+      "archiveDescription": "Play five archived daily trivia questions from {date}, with answers and explanations,. First question: {question}",
+      "keywords": "daily trivia, today's trivia, daily quiz, trivia question of the day, daily trivia questions, daily trivia questions and answers, trivia with answers, trivia archive, previous trivia questions, quick trivia quiz, free online trivia, handpicked trivia, science trivia, history trivia, pop culture trivia, geography trivia, sports trivia, music trivia, food and drink trivia, psychology trivia, art and culture trivia, business and economics trivia, architecture trivia"
+    }
+  },
+
+  "moneyPrice": {
+    "title": "Choose Your Plan",
+    "subtitle": "Select the best option for your needs",
+    "billingSwitch": {
+      "options": [
+        {
+          "key": "monthly",
+          "name": "Monthly",
+          "unit": "/month",
+          "discountText": "",
+          "subTitle": "Billed Monthly"
+        },
+        {
+          "key": "yearly",
+          "name": "Yearly",
+          "unit": "/month",
+          "discountText": "Save {percent}%",
+          "subTitle": "Billed Annually"
+        },
+        {
+          "key": "onetime",
+          "name": "One-Time",
+          "unit": "Credit Pack",
+          "discountText": "Credit Pack",
+          "subTitle": "Pay Once"
+        }
+      ],
+      "defaultKey": "yearly"
+    },
+    "subscription": {
+      "plans": [
+        {
+          "key": "F1",
+          "title": "Hobby",
+          "showBillingSubTitle": false,
+          "features": [
+            { "description": "Basic features" },
+            { "description": "Community support" },
+            { "description": "Limited usage" },
+            { "description": "No credit card required" }
+          ]
+        },
+        {
+          "key": "P2",
+          "title": "Pro",
+          "showBillingSubTitle": true,
+          "features": [
+            {
+              "description": "All Free features",
+              "tag": "Hobby"
+            },
+            { "description": "Priority support" },
+            {
+              "description": "50 credits/month",
+              "tooltip": "1 credit = 1 AI generation"
+            },
+            { "description": "Advanced analytics" }
+          ]
+        },
+        {
+          "key": "U3",
+          "title": "Ultra",
+          "showBillingSubTitle": true,
+          "titleTags": ["Most Popular"],
+          "features": [
+            {
+              "description": "All Pro features",
+              "tag": "Pro"
+            },
+            {
+              "description": "200 credits/month",
+              "tooltip": "1 credit = 1 AI generation"
+            },
+            { "description": "Early access to new features" },
+            {
+              "description": "Dedicated support",
+              "tooltip": "24/7 priority support with dedicated account manager"
+            },
+            { "description": "Custom integrations" }
+          ]
+        }
+      ]
+    },
+    "credits": {
+      "plans": [
+        {
+          "key": "F1",
+          "title": "Starter",
+          "subtitle": "25 Credits",
+          "showBillingSubTitle": true,
+          "features": [
+            { "description": "525AI generations" },
+            { "description": "Perfect for trying out" },
+            { "description": "No expiration" },
+            { "description": "Instant activation" }
+          ]
+        },
+        {
+          "key": "P2",
+          "title": "Popular",
+          "subtitle": "150 Credits",
+          "showBillingSubTitle": true,
+          "titleTags": ["Preferred"],
+          "features": [
+            { "description": "150 AI generations" },
+            { "description": "Great for regular use" },
+            { "description": "No expiration" },
+            { "description": "Instant activation" },
+            { "description": "Support batch processing" }
+          ]
+        },
+        {
+          "key": "U3",
+          "title": "Power",
+          "subtitle": "350 Credits",
+          "showBillingSubTitle": true,
+          "features": [
+            { "description": "350 AI generations" },
+            { "description": "Perfect for heavy users" },
+            { "description": "No expiration" },
+            { "description": "Instant activation" }
+          ]
+        }
+      ]
+    },
+    "buttonTexts": {
+      "buyCredits": "Buy Credits",
+      "getStarted": "Get Started",
+      "getPro": "Get Pro",
+      "getUltra": "Get Ultra",
+      "currentPlan": "Current Plan",
+      "upgrade": "Upgrade"
+    }
+  },
+  "credit": {
+    "summary": {
+      "description": "Sum of all available credits",
+      "totalLabel": "Total Credits"
+    },
+    "buckets": {
+      "title": "Credit Breakdown",
+      "empty": "No credits yet",
+      "expiredAtLabel": "Expires",
+      "expandDetail": "Click to show credit details",
+      "hiddenDetail": "Click to hide credit details",
+      "labels": {
+        "free": "Free",
+        "subscription": "Subscription",
+        "onetime": "One-Time"
+      }
+    },
+    "subscription": {
+      "periodLabel": "Current Plan",
+      "manage": "Manage Subscription",
+      "inactive": "Free",
+      "pay": "Subscribe Now"
+    },
+    "onetime": {
+      "buy": "Buy One-Time Credits Pack"
+    }
+  },
+  "seoContent": {
+    "title": "Daily trivia questions for",
+    "eyesOn": "quiz fans",
+    "description": "Handpicked trivia questions, fresh every day, across science, history, pop culture, geography, sports, food, psychology, and more.",
+    "intro": "This is a daily trivia site built around carefully selected questions rather than random quiz filler. Every set is short, approachable, and made to spark curiosity, whether you want today's trivia, a quick trivia quiz, or archived trivia questions from an earlier day.",
+    "sections": [
+      {
+        "title": "Handpicked daily trivia questions",
+        "content": "Each Daily Trivia set features five handpicked trivia questions chosen to feel surprising, clear, and worth thinking about. The goal is not endless volume. The goal is a better daily trivia quiz that gives curious people something fresh to enjoy every day."
+      },
+      {
+        "title": "Trivia across science, history, pop culture, and more",
+        "content": "Daily Trivia is not limited to one type of question. The categories can include Science and Nature, Tech and Innovation, Pop Culture, Lifestyle and Fun, Geography, History, Sports, Music, Sociology, Art and Culture, General Knowledge, Food and Drink, Psychology, Linguistics, Environment and Climate, Business and Economics, and Architecture."
+      },
+      {
+        "title": "Trivia questions with answers and explanations",
+        "content": "People often search for daily trivia questions and answers, not just the question itself. Every set is designed to be more useful than a bare quiz prompt, with clear answers and explanations that make each question feel satisfying after you play."
+      },
+      {
+        "title": "Today's trivia, plus a full trivia archive",
+        "content": "You can play today's trivia when a new set goes live, then browse the trivia archive to revisit previous trivia questions and older daily quiz sets. That makes the site useful both as a question of the day habit and as a growing library of archived trivia."
+      },
+      {
+        "title": "Built to spark curiosity, not just test memory",
+        "content": "The tone of Daily Trivia is intentionally human and curiosity-driven. These are carefully selected trivia questions made to nudge you toward a new fact, a better explanation, or a small moment of surprise, which is why handpicked daily trivia feels different from random free online trivia lists."
+      },
+      {
+        "title": "A quick trivia quiz for a daily routine",
+        "content": "Whether you call it daily trivia, today's trivia, a trivia question of the day, or a free online trivia quiz, the idea is the same: come back for five fresh questions, learn something new, and keep moving. It is a lightweight habit built around good questions."
+      }
+    ],
+    "conclusion": "Play a new set of handpicked trivia questions every day, review the answers and explanations, and browse the archive whenever you want more."
+  },
+  "languageDetection": {
+    "title": "Language Detection",
+    "description": "Would you like to switch to",
+    "close": "No, thanks",
+    "changeAction": "Yes, switch"
+  },
+  "footer": {
+    "company": "Daily Trivia",
+    "copyright": "Copyright © {year} {name} All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "dpa": "Data Protection Agreement",
+    "sitemap": "Sitemap",
+    "contactUs": "Contact Us",
+    "email": "support@daily-trivia.org",
+    "clickToCopyText": "Click to copy",
+    "copiedText": "Copied!",
+    "thanks": "Thanks to"
+  },
+  "clerk": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signUpBonus": "+2",
+    "signUpBonusTooltip": "Sign up and get 2 free credits!"
+  },
+  "linkPreview": {
+    "blog": "Blog",
+    "pricing": "Pricing",
+    "legal": "Legal",
+    "docs": "Docs"
+  },
+  "fuma": {
+    "search": "Search",
+    "searchNoResult": "No results found",
+    "toc": "On this page",
+    "tocNoHeadings": "No Headings",
+    "lastUpdate": "Last updated",
+    "emptyLastUpdate": "Ooops, Ages ago!",
+    "chooseLanguage": "Choose a language",
+    "nextPage": "Next Page",
+    "previousPage": "Previous Page",
+    "chooseTheme": "Theme",
+    "copyMarkdown": "Copy as Markdown",
+    "copyMarkdownDone": "Copied!",
+    "editOnGithub": "Edit on GitHub"
+  },
+  "fingerprint": {
+    "panel": {
+      "toggleAriaLabel": "Fingerprint panel",
+      "title": "Fingerprint Panel",
+      "testModeLabel": "Test",
+      "closeAriaLabel": "Close fingerprint panel"
+    },
+    "sections": {
+      "user": "User",
+      "creditsInfo": "Credits Info",
+      "subscription": "Subscription",
+      "concurrentBaseInfo": "Concurrent Base Info"
+    },
+    "labels": {
+      "userId": "UserID",
+      "nickName": "NickName",
+      "fingerprintId": "FingerprintID",
+      "clerkUserId": "ClerkUserID",
+      "email": "Email",
+      "stripeCusId": "StripeCusID",
+      "createdAt": "CreatedAt",
+      "plan": "Plan",
+      "period": "Period",
+      "allocated": "Allocated",
+      "subId": "SubID",
+      "orderId": "OrderID",
+      "priceId": "PriceID",
+      "realBrowser": "Real Browser",
+      "testOverride": "Test Override"
+    },
+    "creditBuckets": {
+      "paid": "Paid",
+      "oneTimePaid": "OneTimePaid",
+      "free": "Free"
+    },
+    "placeholders": {
+      "subscriptionStatusNever": "Never",
+      "subscriptionPeriodUnavailable": "Unavailable",
+      "noCreditsYet": "No Credits Yet",
+      "noRecords": "No records",
+      "noTestExecutedYet": "No test executed yet.",
+      "none": "None",
+      "unknownError": "Unknown error"
+    },
+    "status": {
+      "pending": "pending",
+      "idle": "idle"
+    },
+    "actions": {
+      "frontendPreventionTest": "Frontend Prevention Test",
+      "backendIdempotencyTest": "Backend Idempotency Test",
+      "generateNewTestFingerprintAriaLabel": "Generate new test fingerprint",
+      "dismissErrorAriaLabel": "Dismiss error"
+    },
+    "messages": {
+      "testFingerprintNotReady": "Test fingerprint override is not ready yet.",
+      "runningFrontendPreventionTest": "Running Frontend Prevention Test with fingerprint: {fingerprintId}",
+      "frontendPreventionTestFinished": "Frontend Prevention Test finished. Active test fingerprint: {fingerprintId}",
+      "frontendPreventionTestFailed": "Frontend Prevention Test failed: {error}",
+      "failedToInitializeAnonymousUser": "Failed to initialize anonymous user",
+      "runningBackendIdempotencyTest": "Running Backend Idempotency Test with fingerprint: {fingerprintId}",
+      "backendIdempotencyTestDone": "Backend Idempotency Test done.",
+      "backendIdempotencyTestFailed": "Backend Idempotency Test failed: {error}",
+      "generatedTestFingerprintOverride": "Generated test fingerprint override: {fingerprintId}",
+      "createdCount": "created={count}",
+      "reusedCount": "reused={count}",
+      "failedCount": "failed={count}",
+      "createdUserIds": "createdUserIds=[{value}]",
+      "failedStatuses": "failedStatuses=[{value}]"
+    }
+  }
+}

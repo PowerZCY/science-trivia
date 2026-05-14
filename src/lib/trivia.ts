@@ -1,0 +1,320 @@
+import "server-only";
+
+import { cache } from "react";
+import { prisma as rawPrisma } from "@/server/prisma";
+import { AnswersUniverseSdkError, createAnswersUniverseClientFromEnv } from "@windrun-huaiin/faq-sdk";
+import type { OuterQuestionBaseItemDto } from "@windrun-huaiin/faq-sdk";
+import type { Prisma } from "@app-prisma";
+
+const DAY_ONE = "2026-04-01";
+
+let faqClient: ReturnType<typeof createAnswersUniverseClientFromEnv> | null = null;
+const dailyQuestionSchedule = (rawPrisma as typeof rawPrisma & {
+  dailyQuestionSchedule: Prisma.DailyQuestionScheduleDelegate;
+}).dailyQuestionSchedule;
+
+export type DailyQuizQuestion = {
+  id: string;
+  uuid: string;
+  question: string;
+  questionImageUrl?: string | null;
+  correctAnswer: string;
+  incorrectAnswers: string[];
+  explanation?: string | null;
+  category?: string | null;
+  sortOrder: number;
+};
+
+export type DailyQuizPayload = {
+  date: string;
+  dayNumber: number;
+  questions: DailyQuizQuestion[];
+};
+
+export type ArchiveDayItem = {
+  date: string;
+  dayNumber: number;
+  firstQuestion: string;
+};
+
+export type ArchiveMetadataItem = {
+  date: string;
+  dayNumber: number;
+  firstQuestion: string;
+};
+
+function formatUtcDate(date: Date): string {
+  return date.toISOString().slice(0, 10);
+}
+
+function toUtcDateOnly(value: string): Date {
+  return new Date(`${value}T00:00:00.000Z`);
+}
+
+function getQuestionId(item: OuterQuestionBaseItemDto): string {
+  return String(item.id ?? "");
+}
+
+function normalizeQuestion(
+  item: OuterQuestionBaseItemDto,
+  sortOrder: number,
+): DailyQuizQuestion {
+  return {
+    id: String(item.id),
+    uuid: item.uuid,
+    question: item.question,
+    questionImageUrl: item.questionImageUrl ?? null,
+    correctAnswer: item.correctAnswer,
+    incorrectAnswers: item.incorrectAnswers ?? [],
+    explanation: item.explanation ?? null,
+    category: item.category ?? null,
+    sortOrder,
+  };
+}
+
+function getFaqClient() {
+  faqClient ??= createAnswersUniverseClientFromEnv();
+  return faqClient;
+}
+
+function isRecoverableQuestionProviderError(error: unknown) {
+  if (!(error instanceof AnswersUniverseSdkError)) {
+    return false;
+  }
+
+  return (
+    error.code === "REQUEST_FAILED" ||
+    error.code === "REQUEST_TIMEOUT" ||
+    (error.code === "HTTP_ERROR" && typeof error.status === "number" && error.status >= 500)
+  );
+}
+
+async function getQuestionMap(ids: string[]) {
+  if (ids.length === 0) {
+    return new Map<string, OuterQuestionBaseItemDto>();
+  }
+
+  let result: Awaited<ReturnType<ReturnType<typeof getFaqClient>["v1"]["questionsBase"]["getByIds"]>>;
+  try {
+    result = await getFaqClient().v1.questionsBase.getByIds(ids);
+  } catch (error) {
+    if (isRecoverableQuestionProviderError(error)) {
+      console.warn("[trivia] Question provider unavailable; rendering without question details.", error);
+      return new Map<string, OuterQuestionBaseItemDto>();
+    }
+
+    throw error;
+  }
+
+  const items = Array.isArray(result?.items) ? result.items : [];
+
+  return new Map(
+    items
+      .filter((item) => item?.id != null)
+      .map((item) => [getQuestionId(item), item]),
+  );
+}
+
+async function getScheduledQuestionsByDate(date: string) {
+  return dailyQuestionSchedule.findMany({
+    where: {
+      showDate: toUtcDateOnly(date),
+    },
+    orderBy: {
+      sortOrder: "asc",
+    },
+  });
+}
+
+async function getFirstScheduledQuestionByDate(date: string) {
+  return dailyQuestionSchedule.findFirst({
+    where: {
+      showDate: toUtcDateOnly(date),
+      asFirst: 1,
+    },
+    orderBy: {
+      sortOrder: "asc",
+    },
+    select: {
+      showDate: true,
+      question: true,
+    },
+  });
+}
+
+export async function hasDailyQuizScheduleByDate(date: string) {
+  const count = await dailyQuestionSchedule.count({
+    where: {
+      showDate: toUtcDateOnly(date),
+    },
+  });
+
+  return count > 0;
+}
+
+async function getPublishedFirstQuestionSchedules(options: {
+  beforeTodayOnly?: boolean;
+  limit?: number;
+  order: "asc" | "desc";
+}) {
+  const today = toUtcDateOnly(getTodayUtcDate());
+
+  return dailyQuestionSchedule.findMany({
+    where: {
+      asFirst: 1,
+      showDate: options.beforeTodayOnly
+        ? {
+            lt: today,
+          }
+        : {
+            lte: today,
+          },
+    },
+    orderBy: {
+      showDate: options.order,
+    },
+    ...(options.limit ? { take: options.limit } : {}),
+  });
+}
+
+export function getTodayUtcDate() {
+  return formatUtcDate(new Date());
+}
+
+export function getDayNumberFromDate(date: string) {
+  const diffMs = toUtcDateOnly(date).getTime() - toUtcDateOnly(DAY_ONE).getTime();
+  return Math.floor(diffMs / 86_400_000) + 1;
+}
+
+export function isValidTriviaDate(date: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return false;
+  }
+
+  const parsed = toUtcDateOnly(date);
+  return !Number.isNaN(parsed.getTime()) && formatUtcDate(parsed) === date;
+}
+
+export function isFutureTriviaDate(date: string) {
+  if (!isValidTriviaDate(date)) {
+    return false;
+  }
+
+  return date > getTodayUtcDate();
+}
+
+export async function getQuizDetailsByDate(date: string): Promise<DailyQuizPayload | null> {
+  const schedule = await getScheduledQuestionsByDate(date);
+
+  if (schedule.length === 0) {
+    return null;
+  }
+
+  const ids = schedule.map((item) => item.questionId.toString());
+  const questionMap = await getQuestionMap(ids);
+  const questions = schedule
+    .map((item) => {
+      const question = questionMap.get(item.questionId.toString());
+      if (!question) {
+        return null;
+      }
+
+      return normalizeQuestion(question, item.sortOrder);
+    })
+    .filter((item): item is DailyQuizQuestion => item !== null);
+
+  if (questions.length === 0) {
+    return null;
+  }
+
+  return {
+    date,
+    dayNumber: getDayNumberFromDate(date),
+    questions,
+  };
+}
+
+export async function getDailyQuizByDate(date: string) {
+  return getQuizDetailsByDate(date);
+}
+
+export const getCachedDailyQuizByDate = cache(getDailyQuizByDate);
+
+export async function getArchiveMetadataByDate(date: string): Promise<ArchiveMetadataItem | null> {
+  const firstSchedule = await getFirstScheduledQuestionByDate(date);
+
+  if (!firstSchedule?.question.trim()) {
+    return null;
+  }
+
+  return {
+    date,
+    dayNumber: getDayNumberFromDate(date),
+    firstQuestion: firstSchedule.question,
+  };
+}
+
+export const getCachedArchiveMetadataByDate = cache(getArchiveMetadataByDate);
+
+export async function getTodayDailyQuiz() {
+  return getQuizDetailsByDate(getTodayUtcDate());
+}
+
+export async function getLatestAvailableQuizDetails(): Promise<DailyQuizPayload | null> {
+  const candidates = await getPublishedFirstQuestionSchedules({
+    order: "desc",
+    limit: 30,
+  });
+
+  for (const candidate of candidates) {
+    const quiz = await getQuizDetailsByDate(formatUtcDate(candidate.showDate));
+    if (quiz) {
+      return quiz;
+    }
+  }
+
+  return null;
+}
+
+export async function getArchiveDaySummaries(): Promise<ArchiveDayItem[]> {
+  const schedule = await getPublishedFirstQuestionSchedules({
+    beforeTodayOnly: true,
+    order: "desc",
+  });
+
+  if (schedule.length === 0) {
+    return [];
+  }
+
+  return schedule
+    .map((item) => {
+      if (!item.question?.trim()) {
+        return null;
+      }
+
+      const date = formatUtcDate(item.showDate);
+      return {
+        date,
+        dayNumber: getDayNumberFromDate(date),
+        firstQuestion: item.question,
+      };
+    })
+    .filter((item): item is ArchiveDayItem => item !== null);
+}
+
+export async function getPublishedQuizDates(): Promise<string[]> {
+  const schedule = await getPublishedFirstQuestionSchedules({
+    beforeTodayOnly: true,
+    order: "asc",
+  });
+
+  return Array.from(new Set(schedule.map((item) => formatUtcDate(item.showDate))));
+}
+
+export async function getLatestAvailableDailyQuiz() {
+  return getLatestAvailableQuizDetails();
+}
+
+export async function getArchiveDays() {
+  return getArchiveDaySummaries();
+}
