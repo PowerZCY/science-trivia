@@ -27,7 +27,7 @@
 - `sourceKey = "blog"`
 - `src/mdx/blog`
 
-这样可以降低改动范围，避免同时重构 `site-docs-base.ts`、`.source` 生成配置和 `appConfig.mdxSourceDir`。后续也不计划把内部 sourceKey 和目录重命名为 archive，除非项目整体文档系统另行重构。
+这样可以降低改动范围，避免同时重构 `site-docs-base.ts`、`.source` 生成配置。后续也不计划把内部 sourceKey 和目录重命名为 archive，除非项目整体文档系统另行重构。
 
 ### MDX 内容规则
 

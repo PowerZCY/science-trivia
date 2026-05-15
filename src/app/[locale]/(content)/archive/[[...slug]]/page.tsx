@@ -16,8 +16,6 @@ const { Page: FumaPage } = createFumaPage({
   sourceKey: sourceKey,
   mdxContentSource: () => siteDocs.getContentSource(sourceKey),
   getMDXComponents: siteDocs.getMDXComponents,
-  mdxSourceDir: appConfig.mdxSourceDir[sourceKey],
-  githubBaseUrl: appConfig.githubBaseUrl,
   showBreadcrumb: false,
   showTableOfContent: true,
   showTableOfContentPopover: false,
