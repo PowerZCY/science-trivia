@@ -196,6 +196,19 @@ CREATE INDEX IF NOT EXISTS idx_daily_question_schedule_show_date ON dailyt.daily
 CREATE INDEX IF NOT EXISTS idx_daily_question_schedule_question_id ON dailyt.daily_question_schedule (question_id);
 CREATE INDEX IF NOT EXISTS idx_daily_question_schedule_question_uuid ON dailyt.daily_question_schedule (question_uuid);
 
+-- Science Trivia 随机题池表
+CREATE TABLE IF NOT EXISTS dailyt.science_question_pool (
+    id            BIGSERIAL PRIMARY KEY,
+    question_id   BIGINT       NOT NULL,
+    enabled       INTEGER      NOT NULL DEFAULT 1,
+    created_at    TIMESTAMPTZ  DEFAULT CURRENT_TIMESTAMP,
+    updated_at    TIMESTAMPTZ  DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT science_question_pool_question_id_key UNIQUE (question_id),
+    CONSTRAINT science_question_pool_enabled_check CHECK (enabled = ANY (ARRAY[0, 1]))
+);
+
+CREATE INDEX IF NOT EXISTS idx_science_question_pool_enabled ON dailyt.science_question_pool (enabled);
+
 
 
 -- 重建表后必须重新执行一次显式授权。

@@ -30,6 +30,19 @@ model DailyQuestionSchedule {
   @@schema("dailyt")
 }
 
+model ScienceQuestionPool {
+  id         BigInt    @id @default(autoincrement())
+  questionId BigInt    @unique @map("question_id")
+  enabled    Int       @default(1)
+  createdAt  DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@index([enabled], map: "idx_science_question_pool_enabled")
+  @@map("science_question_pool")
+
+  @@schema("dailyt")
+}
+
 // === backend-core models ===
 model User {
   id            BigInt         @id @default(autoincrement())

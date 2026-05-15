@@ -3,7 +3,7 @@ import path from "node:path";
 import type { MetadataRoute } from "next";
 import { getAsNeededLocalizedUrl } from "@windrun-huaiin/lib/utils";
 import { appConfig, defaultLocale, localePrefixAsNeeded } from "@/lib/appConfig";
-import { getPublishedQuizDates, getTodayUtcDate, isValidTriviaDate } from "@/lib/trivia";
+import { isValidTriviaDate } from "@/lib/trivia";
 
 export const revalidate = 86_400;
 
@@ -93,9 +93,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { route: "/", changeFrequency: "daily" as const, priority: 1 }
   ];
 
-  const blogRoutes = getMdxRoutesFromDirectory(
+  const archiveRoutes = getMdxRoutesFromDirectory(
     path.join(process.cwd(), appConfig.mdxSourceDir.blog),
-    "/blog",
+    "/archive",
     "monthly",
     0.8,
   );
@@ -107,9 +107,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     0.6,
   );
 
-  const archiveDates = await getPublishedQuizDates();
-  const todayDate = getTodayUtcDate();
-
   return [
     ...staticRoutes.flatMap((route) =>
       buildLocalizedEntries(route.route, {
@@ -117,7 +114,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: route.priority,
       }),
     ),
-    ...blogRoutes.flatMap((route) =>
+    ...archiveRoutes.flatMap((route) =>
       buildLocalizedEntries(route.route, {
         lastModified: route.date,
         changeFrequency: route.changeFrequency,
@@ -129,13 +126,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         lastModified: route.date,
         changeFrequency: route.changeFrequency,
         priority: route.priority,
-      }),
-    ),
-    ...archiveDates.flatMap((date) =>
-      buildLocalizedEntries(`/archive/${date}`, {
-        lastModified: date,
-        changeFrequency: date === todayDate ? "daily" : "never",
-        priority: 0.7,
       }),
     ),
   ];

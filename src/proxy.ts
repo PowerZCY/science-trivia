@@ -43,7 +43,8 @@ const publicApiRoutes = createRouteMatcher([
   '/api/legal',
   '/api/docs',
   '/api/search',
-  '/api/blog'
+  '/api/archive',
+  '/api/science-quiz/generate'
 ]);
 
 // Clerk v6 recommended usage: export clerkMiddleware(handler, options) directly.

@@ -26,8 +26,8 @@ export async function primaryNavLinks(locale: string): Promise<SiteNavItemConfig
   return [
     createLocalizedNavLink(
       {
-        text: t1('blog'),
-        path: '/blog',
+        text: t1('archive'),
+        path: '/archive',
         prefetch: false,
       },
       context,

@@ -1,22 +1,22 @@
 {
   "home": {
-    "title": "Daily Trivia",
+    "title": "Science Trivia",
     "banner": "",
-    "webTitle": "Daily Trivia: 5 Fun, Handpicked Questions for Curious Minds",
-    "webDescription": "Play today's daily trivia with five handpicked questions across multiple categories, plus answers, explanations, and a full archive.",
-    "keywords": "daily trivia, today's trivia, daily quiz, trivia question of the day, daily trivia questions and answers, handpicked trivia, free online trivia"
+    "webTitle": "Science Trivia: 5 Fresh Questions and Weekly Science Themes",
+    "webDescription": "Generate five science trivia questions, review clear explanations, and explore weekly science themes built from surprising facts.",
+    "keywords": "science trivia, science quiz, science questions and answers, weekly science facts, science trivia archive, free online science quiz"
   },
   "hero": {
-    "title": "Daily Trivia for Curious Minds",
-    "description": "Five handpicked questions across multiple categories, designed to spark curiosity.",
-    "emptyTitle": "Today’s trivia is not ready yet.",
-    "emptyDescription": "The daily set has not been scheduled for the current UTC date yet. Check back soon or browse an earlier day from the archive.",
-    "archive": {
-      "title": "Archive",
-      "description": "Explore previous Daily Trivia quizzes, revisit handpicked trivia questions, and open the full set for any archived day.",
-      "completed": "Completed",
-      "incompleteOnly": "Hide complete days",
-      "empty": "All archived days are completed. Turn off the filter to browse the full archive again."
+    "title": "Science Trivia for Curious Minds",
+    "description": "Generate five science questions, then follow a weekly theme that turns surprising facts into deeper understanding.",
+    "featured": {
+      "eyebrow": "Weekly featured",
+      "highlightsTitle": "Key ideas",
+      "description": "Each weekly theme starts from a strong science trivia question and expands it into connected facts worth remembering.",
+      "readMore": "Read more",
+      "archive": "Archive",
+      "emptyTitle": "Weekly Science Trivia is not ready yet.",
+      "emptyDescription": "The first weekly theme has not been published. Check back soon for the archive."
     }
   },
   "quiz": {
@@ -43,23 +43,16 @@
       "share": "Share",
       "copied": "Copied",
       "retry": "Retry"
-    }
-  },
-  "archive": {
-    "detail": {
-      "backToArchive": "Back to  archive",
-      "previousDay": "Previous day",
-      "previousDayShort": "Previous: Day {day}",
-      "nextDayShort": "Next: Day {day}",
-      "noPreviousDay": "No earlier archive is available.",
-      "noNextDay": "No later archive is available."
     },
-    "metadata": {
-      "archiveTitle": "Daily Trivia Archive Day {day} · {date}",
-      "archiveDescription": "Play five archived daily trivia questions from {date}, with answers and explanations,. First question: {question}",
-      "keywords": "daily trivia, today's trivia, daily quiz, trivia question of the day, daily trivia questions, daily trivia questions and answers, trivia with answers, trivia archive, previous trivia questions, quick trivia quiz, free online trivia, handpicked trivia, science trivia, history trivia, pop culture trivia, geography trivia, sports trivia, music trivia, food and drink trivia, psychology trivia, art and culture trivia, business and economics trivia, architecture trivia"
+    "generate": {
+      "title": "Generate five science questions",
+      "description": "Start a fresh set pulled from the science question pool. Each cached round uses a new group of five questions.",
+      "button": "Generate questions",
+      "generating": "Generating...",
+      "error": "We could not generate questions right now. Please try again."
     }
   },
+  "archive": {},
 
   "moneyPrice": {
     "title": "Choose Your Plan",
@@ -223,37 +216,37 @@
     }
   },
   "seoContent": {
-    "title": "Daily trivia questions for",
-    "eyesOn": "quiz fans",
-    "description": "Handpicked trivia questions, fresh every day, across science, history, pop culture, geography, sports, food, psychology, and more.",
-    "intro": "This is a daily trivia site built around carefully selected questions rather than random quiz filler. Every set is short, approachable, and made to spark curiosity, whether you want today's trivia, a quick trivia quiz, or archived trivia questions from an earlier day.",
+    "title": "Science trivia questions for",
+    "eyesOn": "curious minds",
+    "description": "Generate science trivia questions, review clear answers, and explore weekly science themes built from surprising facts.",
+    "intro": "Science Trivia is built around short question sets and weekly themes. Generate five fresh questions when you want a quick challenge, then browse the archive for deeper explanations that connect related science facts.",
     "sections": [
       {
-        "title": "Handpicked daily trivia questions",
-        "content": "Each Daily Trivia set features five handpicked trivia questions chosen to feel surprising, clear, and worth thinking about. The goal is not endless volume. The goal is a better daily trivia quiz that gives curious people something fresh to enjoy every day."
+        "title": "Five science questions on demand",
+        "content": "Each generated set gives you five science trivia questions with answers and explanations. The goal is a compact quiz that feels surprising, clear, and worth finishing."
       },
       {
-        "title": "Trivia across science, history, pop culture, and more",
-        "content": "Daily Trivia is not limited to one type of question. The categories can include Science and Nature, Tech and Innovation, Pop Culture, Lifestyle and Fun, Geography, History, Sports, Music, Sociology, Art and Culture, General Knowledge, Food and Drink, Psychology, Linguistics, Environment and Climate, Business and Economics, and Architecture."
+        "title": "Weekly science themes",
+        "content": "The archive turns selected questions into broader themes, connecting everyday chemistry, the human body, nature, space, materials, and physics into readable explanations."
       },
       {
         "title": "Trivia questions with answers and explanations",
-        "content": "People often search for daily trivia questions and answers, not just the question itself. Every set is designed to be more useful than a bare quiz prompt, with clear answers and explanations that make each question feel satisfying after you play."
+        "content": "Every set is designed to be more useful than a bare quiz prompt, with clear answers and explanations that make each question feel satisfying after you play."
       },
       {
-        "title": "Today's trivia, plus a full trivia archive",
-        "content": "You can play today's trivia when a new set goes live, then browse the trivia archive to revisit previous trivia questions and older daily quiz sets. That makes the site useful both as a question of the day habit and as a growing library of archived trivia."
+        "title": "An archive built for science reading",
+        "content": "The archive is not just a list of old questions. It is a growing collection of weekly science topics that use trivia as an entry point into deeper ideas."
       },
       {
         "title": "Built to spark curiosity, not just test memory",
-        "content": "The tone of Daily Trivia is intentionally human and curiosity-driven. These are carefully selected trivia questions made to nudge you toward a new fact, a better explanation, or a small moment of surprise, which is why handpicked daily trivia feels different from random free online trivia lists."
+        "content": "The tone of Science Trivia is intentionally human and curiosity-driven. The best questions reveal a mechanism, a misconception, or a pattern you can remember after the quiz ends."
       },
       {
-        "title": "A quick trivia quiz for a daily routine",
-        "content": "Whether you call it daily trivia, today's trivia, a trivia question of the day, or a free online trivia quiz, the idea is the same: come back for five fresh questions, learn something new, and keep moving. It is a lightweight habit built around good questions."
+        "title": "A quick science quiz for repeat play",
+        "content": "The quiz uses cached question groups so repeat sessions can keep feeling fresh. When one group is finished, the next generated set pulls a new group of five science questions."
       }
     ],
-    "conclusion": "Play a new set of handpicked trivia questions every day, review the answers and explanations, and browse the archive whenever you want more."
+    "conclusion": "Generate a set of five science trivia questions, review the answers, and browse the archive whenever you want a deeper theme."
   },
   "languageDetection": {
     "title": "Language Detection",
@@ -262,14 +255,14 @@
     "changeAction": "Yes, switch"
   },
   "footer": {
-    "company": "Daily Trivia",
+    "company": "Science Trivia",
     "copyright": "Copyright © {year} {name} All rights reserved.",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
     "dpa": "Data Protection Agreement",
     "sitemap": "Sitemap",
     "contactUs": "Contact Us",
-    "email": "support@daily-trivia.org",
+    "email": "support@science-trivia.org",
     "clickToCopyText": "Click to copy",
     "copiedText": "Copied!",
     "thanks": "Thanks to"
@@ -281,7 +274,7 @@
     "signUpBonusTooltip": "Sign up and get 2 free credits!"
   },
   "linkPreview": {
-    "blog": "Blog",
+    "archive": "Archive",
     "pricing": "Pricing",
     "legal": "Legal",
     "docs": "Docs"

@@ -1,25 +1,16 @@
 import "server-only";
 
 import {
-  getArchiveDaySummaries,
-  getLatestAvailableQuizDetails,
-  type ArchiveDayItem,
-  type DailyQuizPayload,
-} from "@/lib/trivia";
+  getLatestPublishedArchiveTopic,
+  type ArchiveTopic,
+} from "@/lib/archive-topics";
 
 export type HomeTriviaData = {
-  latestQuiz: DailyQuizPayload | null;
-  archiveDays: ArchiveDayItem[];
+  featuredTopic: ArchiveTopic | null;
 };
 
 export async function getHomeTriviaData(): Promise<HomeTriviaData> {
-  const [latestQuiz, archiveDays] = await Promise.all([
-    getLatestAvailableQuizDetails(),
-    getArchiveDaySummaries(),
-  ]);
-
   return {
-    latestQuiz,
-    archiveDays,
+    featuredTopic: getLatestPublishedArchiveTopic(),
   };
 }

@@ -12,6 +12,9 @@ let faqClient: ReturnType<typeof createAnswersUniverseClientFromEnv> | null = nu
 const dailyQuestionSchedule = (rawPrisma as typeof rawPrisma & {
   dailyQuestionSchedule: Prisma.DailyQuestionScheduleDelegate;
 }).dailyQuestionSchedule;
+const scienceQuestionPool = (rawPrisma as typeof rawPrisma & {
+  scienceQuestionPool: Prisma.ScienceQuestionPoolDelegate;
+}).scienceQuestionPool;
 
 export type DailyQuizQuestion = {
   id: string;
@@ -113,6 +116,36 @@ async function getQuestionMap(ids: string[]) {
       .filter((item) => item?.id != null)
       .map((item) => [getQuestionId(item), item]),
   );
+}
+
+export async function getQuestionsByIds(ids: string[]) {
+  const questionMap = await getQuestionMap(ids);
+  return ids
+    .map((id, index) => {
+      const question = questionMap.get(id);
+      if (!question) {
+        return null;
+      }
+
+      return normalizeQuestion(question, index + 1);
+    })
+    .filter((item): item is DailyQuizQuestion => item !== null);
+}
+
+export async function getEnabledScienceQuestionIds() {
+  const rows = await scienceQuestionPool.findMany({
+    where: {
+      enabled: 1,
+    },
+    select: {
+      questionId: true,
+    },
+    orderBy: {
+      questionId: "asc",
+    },
+  });
+
+  return rows.map((item) => item.questionId.toString());
 }
 
 async function getScheduledQuestionsByDate(date: string) {

@@ -8,7 +8,8 @@ import { Check, ChevronRight, RotateCcw, Share2, X } from "lucide-react";
 import type { DailyQuizPayload } from "@/lib/trivia";
 
 type Props = {
-  quiz: DailyQuizPayload;
+  quiz: DailyQuizPayload | null;
+  mode?: "daily" | "random";
   copy: {
     progressLabel: string;
     questionLabel: string;
@@ -30,6 +31,11 @@ type Props = {
     share: string;
     copied: string;
     retry: string;
+    generateTitle?: string;
+    generateDescription?: string;
+    generateButton?: string;
+    generating?: string;
+    generateError?: string;
   };
 };
 
@@ -49,15 +55,15 @@ type AnswerState = {
 };
 
 function getQuizStorageKey(date: string) {
-  return `daily-trivia:quiz:${date}`;
+  return `science-trivia:quiz:${date}`;
 }
 
 function getCompletedDaysKey() {
-  return "daily-trivia:completed-days";
+  return "science-trivia:completed-days";
 }
 
 function getCompletedDaysChangedEventName() {
-  return "daily-trivia:completed-days-changed";
+  return "science-trivia:completed-days-changed";
 }
 
 function createSeededRandom(seed: string) {
@@ -176,9 +182,9 @@ function buildShareLink() {
 
 function buildShareText(score: number, total: number, dayNumber: number, date: string, shareLink: string) {
   return [
-    `💡 Daily Trivia Challenge - Day ${dayNumber}`,
-    `🗓️ ${date}`,
-    `🎯 I got ${score}/${total}. The questions are surprisingly fun. Come play:`,
+    `Science Trivia Challenge`,
+    `Set ${date}`,
+    `I got ${score}/${total}. The questions are surprisingly fun. Come play:`,
     `${shareLink}`,
   ].join("\n");
 }
@@ -194,9 +200,26 @@ function formatReportCopy(body: string, score: string) {
   return `You got ${score}. ${normalizedBody}`;
 }
 
-export function DailyQuizClient({ quiz, copy }: Props) {
+function getAnonymousUuid() {
+  const key = "science-trivia:anonymous-uuid";
+  const existing = window.localStorage.getItem(key);
+  if (existing) {
+    return existing;
+  }
+
+  const next = typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? crypto.randomUUID()
+    : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  window.localStorage.setItem(key, next);
+  return next;
+}
+
+export function DailyQuizClient({ quiz: initialQuiz, copy, mode = "daily" }: Props) {
   const finalRevealDurationMs = 1500;
-  const totalQuestions = quiz.questions.length;
+  const [quiz, setQuiz] = useState<DailyQuizPayload | null>(initialQuiz);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generateError, setGenerateError] = useState(false);
+  const totalQuestions = quiz?.questions.length ?? 0;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
   const [answers, setAnswers] = useState<AnswerState[]>([]);
@@ -210,20 +233,24 @@ export function DailyQuizClient({ quiz, copy }: Props) {
   const confettiFrameRef = useRef<number | null>(null);
   const finalRevealTimerRef = useRef<number | null>(null);
 
-  const currentQuestion = quiz.questions[currentIndex];
+  const currentQuestion = quiz?.questions[currentIndex];
 
   const options = useMemo(() => {
     if (!currentQuestion) {
       return [];
     }
     return shuffleAnswers(
-      `${quiz.date}:${currentQuestion.id}`,
+      `${quiz?.date ?? "science"}:${currentQuestion.id}`,
       currentQuestion.correctAnswer,
       currentQuestion.incorrectAnswers,
     );
-  }, [currentQuestion, quiz.date]);
+  }, [currentQuestion, quiz?.date]);
 
   useEffect(() => {
+    if (!quiz) {
+      return;
+    }
+
     const saved = readCompletion(quiz.date);
     Promise.resolve().then(() => {
       if (!saved) {
@@ -236,7 +263,7 @@ export function DailyQuizClient({ quiz, copy }: Props) {
       setShowReport(true);
       setHasTrackedStart(true);
     });
-  }, [quiz.date, quiz.questions.length]);
+  }, [quiz]);
 
   useEffect(() => {
     if (!copied) {
@@ -263,13 +290,13 @@ export function DailyQuizClient({ quiz, copy }: Props) {
     };
   }, []);
 
-  const reviewItems = quiz.questions.map((question) => {
+  const reviewItems = quiz?.questions.map((question) => {
     const answer = answers.find((item) => item.questionId === question.id);
     return {
       question,
       isCorrect: answer?.isCorrect ?? false,
     };
-  });
+  }) ?? [];
 
   const wrongCount = reviewItems.filter((item) => !item.isCorrect).length;
   const scoreTitle = getScoreTitle(correctCount, totalQuestions, copy);
@@ -280,6 +307,10 @@ export function DailyQuizClient({ quiz, copy }: Props) {
     : reportBody;
 
   function saveFinishedQuiz(nextAnswers: AnswerState[], nextCorrectCount: number) {
+    if (!quiz) {
+      return;
+    }
+
     writeCompletion({
       completed: true,
       date: quiz.date,
@@ -372,7 +403,7 @@ export function DailyQuizClient({ quiz, copy }: Props) {
   }
 
   function handleAnswer(answer: string) {
-    if (!currentQuestion || selectedAnswer) {
+    if (!quiz || !currentQuestion || selectedAnswer) {
       return;
     }
 
@@ -433,6 +464,10 @@ export function DailyQuizClient({ quiz, copy }: Props) {
   }
 
   async function handleShare() {
+    if (!quiz) {
+      return;
+    }
+
     const shareLink = buildShareLink();
     const text = buildShareText(correctCount, totalQuestions, quiz.dayNumber, quiz.date, shareLink);
     trackGaEvent("report_share_clicked", {
@@ -450,6 +485,10 @@ export function DailyQuizClient({ quiz, copy }: Props) {
   }
 
   function handleRetry() {
+    if (!quiz) {
+      return;
+    }
+
     trackGaEvent("report_retry_clicked", {
       date: quiz.date,
       day_number: quiz.dayNumber,
@@ -470,6 +509,87 @@ export function DailyQuizClient({ quiz, copy }: Props) {
     setReviewFilter("all");
     setCopied(false);
     setHasTrackedStart(false);
+    if (mode === "random") {
+      setQuiz(null);
+    }
+  }
+
+  async function handleGenerateQuiz() {
+    if (isGenerating) {
+      return;
+    }
+
+    setIsGenerating(true);
+    setGenerateError(false);
+
+    try {
+      const uuid = getAnonymousUuid();
+      const response = await fetch("/api/science-quiz/generate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ uuid }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to generate quiz.");
+      }
+
+      const payload = (await response.json()) as { quiz?: DailyQuizPayload };
+      if (!payload.quiz?.questions?.length) {
+        throw new Error("Generated quiz is empty.");
+      }
+
+      setQuiz(payload.quiz);
+      setCurrentIndex(0);
+      setCorrectCount(0);
+      setAnswers([]);
+      setSelectedAnswer(null);
+      setShowReport(false);
+      setIsFinishingQuiz(false);
+      setReviewFilter("all");
+      setCopied(false);
+      setHasTrackedStart(false);
+    } catch (error) {
+      if (process.env.NODE_ENV !== "production") {
+        console.error(error);
+      }
+      setGenerateError(true);
+    } finally {
+      setIsGenerating(false);
+    }
+  }
+
+  if (!quiz) {
+    return (
+      <section className="relative overflow-hidden rounded-4xl border border-white/70 bg-[linear-gradient(135deg,#fff8ec_0%,#f5fbff_50%,#fffaf6_100%)] p-5 shadow-[0_30px_120px_rgba(15,23,42,0.08)] sm:p-6">
+        <div className="absolute inset-y-0 right-0 hidden w-1/2 bg-[radial-gradient(circle_at_center,rgba(251,191,36,0.18),transparent_45%),radial-gradient(circle_at_bottom,rgba(56,189,248,0.18),transparent_35%)] lg:block" />
+        <div className="relative mx-auto max-w-2xl text-center">
+          <h2 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
+            {copy.generateTitle ?? "Generate five questions"}
+          </h2>
+          <p className="mt-3 text-sm leading-7 text-slate-600 sm:text-base">
+            {copy.generateDescription ?? copy.progressLabel}
+          </p>
+          {generateError ? (
+            <p className="mt-3 text-sm font-medium text-rose-700">
+              {copy.generateError ?? "Unable to generate questions. Please try again."}
+            </p>
+          ) : null}
+          <button
+            type="button"
+            onClick={handleGenerateQuiz}
+            disabled={isGenerating}
+            className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-slate-950 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {isGenerating
+              ? copy.generating ?? "Generating..."
+              : copy.generateButton ?? "Generate questions"}
+          </button>
+        </div>
+      </section>
+    );
   }
 
   return (
@@ -482,10 +602,10 @@ export function DailyQuizClient({ quiz, copy }: Props) {
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="text-[22px] font-semibold leading-none tracking-tight text-slate-950 sm:text-[30px]">
-                      Day {quiz.dayNumber}
+                      {mode === "random" ? "Science Trivia" : `Day ${quiz.dayNumber}`}
                     </div>
                     <h2 className="mt-1 text-[15px] font-medium tracking-tight text-slate-950/75 sm:mt-1.5 sm:text-[16px]">
-                      {quiz.date}
+                      {mode === "random" ? "Science Trivia Set" : quiz.date}
                     </h2>
                   </div>
 
