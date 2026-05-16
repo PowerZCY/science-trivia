@@ -33,7 +33,7 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     // Ensure MDX files for the llm-content API route are included in the serverless function
     // Adjust the key if your API route path is different in the output structure
-    '/api/archive/llm-content': ['./src/mdx/blog/**/*', './.source/**/*'],
+    '/api/archive/llm-content': ['./src/mdx/archive/**/*', './.source/**/*'],
     '/api/legal/llm-content': ['./src/mdx/legal/**/*', './.source/**/*'],
     '/archive': ['./.source/**/*'],
     '/archive/[[...slug]]': ['./.source/**/*'],

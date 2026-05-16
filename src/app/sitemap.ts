@@ -95,7 +95,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   const archiveRoutes = getMdxRoutesFromDirectory(
-    path.join(process.cwd(), resolveMdxSourceDir('blog')),
+    path.join(process.cwd(), resolveMdxSourceDir('archive')),
     "/archive",
     "monthly",
     0.8,

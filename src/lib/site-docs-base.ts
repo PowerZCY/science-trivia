@@ -21,7 +21,7 @@ import type { MDXComponents } from 'mdx/types';
 import { appConfig } from '@/lib/appConfig';
 import { i18n } from '@/lib/i18n-base';
 
-type SourceKey = 'docs' | 'blog' | 'legal';
+type SourceKey = 'docs' | 'blog' | 'legal' | 'archive';
 type SourceFactory = ReturnType<typeof createConfiguredLocalMdSourceFactory>;
 
 export interface CreateSiteDocsOptions {

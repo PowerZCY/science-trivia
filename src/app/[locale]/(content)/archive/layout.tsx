@@ -26,7 +26,7 @@ export default async function Layout({
   children: ReactNode;
 }) {
   const { locale } = await params;
-  const blogSource = await siteDocs.getContentSource('blog');
+  const blogSource = await siteDocs.getContentSource('archive');
   const contentLayoutOptions = await contentOptions(locale);
   const homeLayoutOptions: SiteHomeLayoutConfig = {
     ...contentLayoutOptions,
