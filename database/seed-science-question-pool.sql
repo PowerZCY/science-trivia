@@ -1,7 +1,7 @@
 -- Seed Science Trivia question ids from usb_rows.csv.
 -- Re-running this file is safe; existing rows keep their current enabled value.
 
-INSERT INTO dailyt.science_question_pool (question_id)
+INSERT INTO sciencet.science_question_pool (question_id)
 SELECT unnest(ARRAY[
   10002, 10004, 10005, 10014, 10017, 10022, 10031, 10036, 10042, 10044,
   10046, 10047, 10048, 10051, 10053, 10054, 10056, 10059, 10060, 10065,

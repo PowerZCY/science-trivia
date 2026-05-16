@@ -1,5 +1,5 @@
 -- 用户表
-CREATE TABLE IF NOT EXISTS dailyt.users (
+CREATE TABLE IF NOT EXISTS sciencet.users (
     id                BIGSERIAL PRIMARY KEY,
     user_id           UUID           NOT NULL DEFAULT gen_random_uuid(),
     status            VARCHAR(50)    NOT NULL DEFAULT 'anonymous',
@@ -16,17 +16,17 @@ CREATE TABLE IF NOT EXISTS dailyt.users (
 );
 -- 创建用户表的部分索引
 CREATE UNIQUE INDEX IF NOT EXISTS users_clerk_user_id_key 
-ON dailyt.users (clerk_user_id) 
+ON sciencet.users (clerk_user_id) 
 WHERE status <> 'deleted'; 
 
 CREATE UNIQUE INDEX IF NOT EXISTS users_stripe_cus_id_key 
-ON dailyt.users (stripe_cus_id) 
+ON sciencet.users (stripe_cus_id) 
 WHERE status <> 'deleted';
 
-CREATE INDEX IF NOT EXISTS idx_users_fingerprint_id ON dailyt.users (fingerprint_id);
+CREATE INDEX IF NOT EXISTS idx_users_fingerprint_id ON sciencet.users (fingerprint_id);
 
 -- 订阅表
-CREATE TABLE IF NOT EXISTS dailyt.subscriptions (
+CREATE TABLE IF NOT EXISTS sciencet.subscriptions (
     id                   BIGSERIAL PRIMARY KEY,
     user_id              UUID        NOT NULL,
     status               VARCHAR(50) NOT NULL DEFAULT 'incomplete',
@@ -45,12 +45,12 @@ CREATE TABLE IF NOT EXISTS dailyt.subscriptions (
     CONSTRAINT transactions_deleted_check CHECK (deleted = ANY (ARRAY[0, 1]))
 );
 
-CREATE INDEX IF NOT EXISTS idx_subscriptions_pay_subscription_id ON dailyt.subscriptions (pay_subscription_id);
-CREATE INDEX IF NOT EXISTS idx_subscriptions_order_id ON dailyt.subscriptions (order_id);
-CREATE INDEX IF NOT EXISTS idx_subscriptions_user_id ON dailyt.subscriptions (user_id);
+CREATE INDEX IF NOT EXISTS idx_subscriptions_pay_subscription_id ON sciencet.subscriptions (pay_subscription_id);
+CREATE INDEX IF NOT EXISTS idx_subscriptions_order_id ON sciencet.subscriptions (order_id);
+CREATE INDEX IF NOT EXISTS idx_subscriptions_user_id ON sciencet.subscriptions (user_id);
 
 -- 积分表
-CREATE TABLE IF NOT EXISTS dailyt.credits (
+CREATE TABLE IF NOT EXISTS sciencet.credits (
     id                        BIGSERIAL PRIMARY KEY,
     user_id                   UUID        NOT NULL,
     balance_free              INTEGER     NOT NULL DEFAULT 0,
@@ -70,10 +70,10 @@ CREATE TABLE IF NOT EXISTS dailyt.credits (
     CONSTRAINT credits_user_id_key UNIQUE (user_id)
 );
 
-CREATE INDEX IF NOT EXISTS idx_credits_user_id ON dailyt.credits (user_id);
+CREATE INDEX IF NOT EXISTS idx_credits_user_id ON sciencet.credits (user_id);
 
 -- 交易订单表
-CREATE TABLE IF NOT EXISTS dailyt.transactions (
+CREATE TABLE IF NOT EXISTS sciencet.transactions (
     id                   BIGSERIAL PRIMARY KEY,
     user_id              UUID         NOT NULL,
     order_id             VARCHAR(255) NOT NULL,
@@ -116,13 +116,13 @@ CREATE TABLE IF NOT EXISTS dailyt.transactions (
     CONSTRAINT transactions_deleted_check CHECK (deleted = ANY (ARRAY[0, 1]))
 );
 
-CREATE INDEX IF NOT EXISTS idx_transactions_order_id ON dailyt.transactions (order_id);
-CREATE INDEX IF NOT EXISTS idx_transactions_pay_subscription_id ON dailyt.transactions (pay_subscription_id);
-CREATE INDEX IF NOT EXISTS idx_transactions_user_id ON dailyt.transactions (user_id);
+CREATE INDEX IF NOT EXISTS idx_transactions_order_id ON sciencet.transactions (order_id);
+CREATE INDEX IF NOT EXISTS idx_transactions_pay_subscription_id ON sciencet.transactions (pay_subscription_id);
+CREATE INDEX IF NOT EXISTS idx_transactions_user_id ON sciencet.transactions (user_id);
 
 
 -- 积分使用审计表
-CREATE TABLE IF NOT EXISTS dailyt.credit_audit_log (
+CREATE TABLE IF NOT EXISTS sciencet.credit_audit_log (
     id               BIGSERIAL PRIMARY KEY,
     user_id          UUID         NOT NULL,
     credits_change     INTEGER      NOT NULL,
@@ -135,13 +135,13 @@ CREATE TABLE IF NOT EXISTS dailyt.credit_audit_log (
     CONSTRAINT credit_audit_log_deleted_check CHECK (deleted = ANY (ARRAY[0, 1]))
 );
 
-CREATE INDEX IF NOT EXISTS idx_credit_audit_log_credit_type ON dailyt.credit_audit_log (credit_type);
-CREATE INDEX IF NOT EXISTS idx_credit_audit_log_operation_type ON dailyt.credit_audit_log (operation_type);
-CREATE INDEX IF NOT EXISTS idx_credit_audit_log_user_id ON dailyt.credit_audit_log (user_id);
+CREATE INDEX IF NOT EXISTS idx_credit_audit_log_credit_type ON sciencet.credit_audit_log (credit_type);
+CREATE INDEX IF NOT EXISTS idx_credit_audit_log_operation_type ON sciencet.credit_audit_log (operation_type);
+CREATE INDEX IF NOT EXISTS idx_credit_audit_log_user_id ON sciencet.credit_audit_log (user_id);
 
 
 -- 用户信息备份表
-CREATE TABLE IF NOT EXISTS dailyt.user_backup (
+CREATE TABLE IF NOT EXISTS sciencet.user_backup (
     id                BIGSERIAL PRIMARY KEY,
     original_user_id  UUID         NOT NULL,
     status            VARCHAR(50),
@@ -157,14 +157,14 @@ CREATE TABLE IF NOT EXISTS dailyt.user_backup (
     CONSTRAINT user_backup_deleted_check CHECK (deleted = ANY (ARRAY[0, 1]))
 );
 
-CREATE INDEX IF NOT EXISTS idx_user_backup_clerk_user_id ON dailyt.user_backup (clerk_user_id);
-CREATE INDEX IF NOT EXISTS idx_user_backup_email ON dailyt.user_backup (email);
-CREATE INDEX IF NOT EXISTS idx_user_backup_fingerprint_id ON dailyt.user_backup (fingerprint_id);
-CREATE INDEX IF NOT EXISTS idx_user_backup_original_user_id ON dailyt.user_backup (original_user_id);
+CREATE INDEX IF NOT EXISTS idx_user_backup_clerk_user_id ON sciencet.user_backup (clerk_user_id);
+CREATE INDEX IF NOT EXISTS idx_user_backup_email ON sciencet.user_backup (email);
+CREATE INDEX IF NOT EXISTS idx_user_backup_fingerprint_id ON sciencet.user_backup (fingerprint_id);
+CREATE INDEX IF NOT EXISTS idx_user_backup_original_user_id ON sciencet.user_backup (original_user_id);
 
 
 -- 第三方对接日志审计表
-CREATE TABLE IF NOT EXISTS dailyt.apilog (
+CREATE TABLE IF NOT EXISTS sciencet.apilog (
     id            BIGSERIAL PRIMARY KEY,
     api_type      VARCHAR(100)  NOT NULL,
     method_name   VARCHAR(255) NOT NULL,
@@ -176,7 +176,7 @@ CREATE TABLE IF NOT EXISTS dailyt.apilog (
 
 
 -- 每日题目排期表
-CREATE TABLE IF NOT EXISTS dailyt.daily_question_schedule (
+CREATE TABLE IF NOT EXISTS sciencet.daily_question_schedule (
     id            BIGSERIAL PRIMARY KEY,
     show_date     DATE         NOT NULL,
     question      TEXT         NOT NULL,
@@ -192,12 +192,12 @@ CREATE TABLE IF NOT EXISTS dailyt.daily_question_schedule (
     CONSTRAINT daily_question_schedule_as_first_check CHECK (as_first = ANY (ARRAY[0, 1]))
 );
 
-CREATE INDEX IF NOT EXISTS idx_daily_question_schedule_show_date ON dailyt.daily_question_schedule (show_date);
-CREATE INDEX IF NOT EXISTS idx_daily_question_schedule_question_id ON dailyt.daily_question_schedule (question_id);
-CREATE INDEX IF NOT EXISTS idx_daily_question_schedule_question_uuid ON dailyt.daily_question_schedule (question_uuid);
+CREATE INDEX IF NOT EXISTS idx_daily_question_schedule_show_date ON sciencet.daily_question_schedule (show_date);
+CREATE INDEX IF NOT EXISTS idx_daily_question_schedule_question_id ON sciencet.daily_question_schedule (question_id);
+CREATE INDEX IF NOT EXISTS idx_daily_question_schedule_question_uuid ON sciencet.daily_question_schedule (question_uuid);
 
 -- Science Trivia 随机题池表
-CREATE TABLE IF NOT EXISTS dailyt.science_question_pool (
+CREATE TABLE IF NOT EXISTS sciencet.science_question_pool (
     id            BIGSERIAL PRIMARY KEY,
     question_id   BIGINT       NOT NULL,
     enabled       INTEGER      NOT NULL DEFAULT 1,
@@ -207,7 +207,7 @@ CREATE TABLE IF NOT EXISTS dailyt.science_question_pool (
     CONSTRAINT science_question_pool_enabled_check CHECK (enabled = ANY (ARRAY[0, 1]))
 );
 
-CREATE INDEX IF NOT EXISTS idx_science_question_pool_enabled ON dailyt.science_question_pool (enabled);
+CREATE INDEX IF NOT EXISTS idx_science_question_pool_enabled ON sciencet.science_question_pool (enabled);
 
 
 
@@ -216,7 +216,7 @@ CREATE INDEX IF NOT EXISTS idx_science_question_pool_enabled ON dailyt.science_q
 -- 1. DROP / CREATE 后，新表是全新的数据库对象，不会继承旧表上的 GRANT。
 -- 2. 运维可能使用不同高权限账号执行建表，无法依赖某个固定 owner 的 default privileges。
 -- 因此这里统一在建表 SQL 末尾补一遍授权，保证应用账号始终可访问最新对象。
-GRANT USAGE ON SCHEMA dailyt TO dailyt_app;
-GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA dailyt TO dailyt_app;
-GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA dailyt TO dailyt_app;
-GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA dailyt TO dailyt_app;
+GRANT USAGE ON SCHEMA sciencet TO sciencet_app;
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA sciencet TO sciencet_app;
+GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA sciencet TO sciencet_app;
+GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA sciencet TO sciencet_app;
