@@ -47,7 +47,7 @@ date: 2026-05-04
 // src/lib/archive-topics.ts
 export const archiveTopics = [
   {
-    slug: "everyday-science-is-stranger-than-it-looks",
+    slug: "everyday-science-trivia",
     publishDate: "2026-05-04",
     weekStart: "2026-05-04",
     status: "published",
