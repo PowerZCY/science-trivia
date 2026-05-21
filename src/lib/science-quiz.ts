@@ -47,12 +47,12 @@ export type GeneratedScienceQuiz = {
   cacheAvailable: boolean;
 };
 
-function getGroupsKey(uuid: string) {
-  return `user-groups:${uuid}`;
+function getGroupsKey(fingerprintId: string) {
+  return `user-groups:${fingerprintId}`;
 }
 
-function getGroupsLockKey(uuid: string) {
-  return `user-groups-lock:${uuid}`;
+function getGroupsLockKey(fingerprintId: string) {
+  return `user-groups-lock:${fingerprintId}`;
 }
 
 function isUpstashCacheEnabled() {
@@ -202,8 +202,8 @@ async function createFreshCache() {
   } satisfies ScienceQuizGroupCache;
 }
 
-async function takeQuestionIdsFromCache(uuid: string) {
-  const key = getGroupsKey(uuid);
+async function takeQuestionIdsFromCache(fingerprintId: string) {
+  const key = getGroupsKey(fingerprintId);
   let cache = await getJson<ScienceQuizGroupCache>(key);
   let cacheAvailable = true;
 
@@ -241,12 +241,12 @@ async function takeFallbackQuestionIds() {
   };
 }
 
-async function takeNextQuestionIds(uuid: string) {
+async function takeNextQuestionIds(fingerprintId: string) {
   if (!isUpstashCacheEnabled()) {
     return takeFallbackQuestionIds();
   }
 
-  const locked = await withLock(getGroupsLockKey(uuid), 10_000, () => takeQuestionIdsFromCache(uuid));
+  const locked = await withLock(getGroupsLockKey(fingerprintId), 10_000, () => takeQuestionIdsFromCache(fingerprintId));
 
   if (locked) {
     return locked;
@@ -255,20 +255,20 @@ async function takeNextQuestionIds(uuid: string) {
   return takeFallbackQuestionIds();
 }
 
-export async function generateScienceQuiz(uuid: string): Promise<GeneratedScienceQuiz> {
-  const normalizedUuid = uuid.trim();
-  if (!normalizedUuid) {
-    throw new Error("A user uuid is required to generate a science quiz.");
+export async function generateScienceQuiz(fingerprintId: string): Promise<GeneratedScienceQuiz> {
+  const normalizedFingerprintId = fingerprintId.trim();
+  if (!normalizedFingerprintId) {
+    throw new Error("A fingerprint id is required to generate a science quiz.");
   }
 
-  const { questionIds, remainingGroups, cacheAvailable } = await takeNextQuestionIds(normalizedUuid);
+  const { questionIds, remainingGroups, cacheAvailable } = await takeNextQuestionIds(normalizedFingerprintId);
   const questions = await getQuestionsByIds(questionIds);
 
   if (questions.length !== QUESTIONS_PER_GROUP) {
     throw new Error("Question details are unavailable for the generated science quiz.");
   }
 
-  const quizId = `${normalizedUuid}:${randomUUID()}`;
+  const quizId = `${normalizedFingerprintId}:${randomUUID()}`;
 
   return {
     quiz: {

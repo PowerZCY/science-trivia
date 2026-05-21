@@ -1,26 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
+import { extractFingerprintFromNextRequest } from "@windrun-huaiin/third-ui/fingerprint/server";
 import { generateScienceQuiz } from "@/lib/science-quiz";
 
 export const runtime = "nodejs";
 
-type GenerateScienceQuizBody = {
-  uuid?: unknown;
-};
-
 export async function POST(request: NextRequest) {
-  let body: GenerateScienceQuizBody;
-  try {
-    body = (await request.json()) as GenerateScienceQuizBody;
-  } catch {
-    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
-  }
-
-  if (typeof body.uuid !== "string" || body.uuid.trim().length === 0) {
-    return NextResponse.json({ error: "uuid is required." }, { status: 400 });
+  const fingerprintId = extractFingerprintFromNextRequest(request);
+  if (!fingerprintId) {
+    return NextResponse.json({ error: "fingerprintId is required." }, { status: 400 });
   }
 
   try {
-    const result = await generateScienceQuiz(body.uuid);
+    const result = await generateScienceQuiz(fingerprintId);
     return NextResponse.json({
       quizId: result.quiz.date,
       questionIds: result.questionIds,

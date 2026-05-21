@@ -1,29 +1,37 @@
-import { appConfig, generatedLocales, localePrefixAsNeeded, defaultLocale, themeMode } from '@/lib/appConfig';
-import { getFumaTranslations } from '@windrun-huaiin/third-ui/fuma/fuma-translate-util';
-import { createLocalizedSiteMetadata } from '@windrun-huaiin/third-ui/lib/seo-metadata';
-import { NProgressBar } from '@windrun-huaiin/third-ui/main';
-import { DocsRootProvider } from '@windrun-huaiin/third-ui/fuma/base/docs-root-provider';
-import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, setRequestLocale } from 'next-intl/server';
+import { appConfig, generatedLocales, themeMode } from '@/lib/appConfig';
 import { montserrat } from '@/lib/fonts';
 import { cn } from '@windrun-huaiin/lib/utils';
-import './globals.css';
+import { DocsRootProvider } from '@windrun-huaiin/third-ui/fuma/base/docs-root-provider';
+import { getFumaTranslations } from '@windrun-huaiin/third-ui/fuma/fuma-translate-util';
+import { createLocalizedPageMetadata, createLocalizedSiteMetadata } from '@windrun-huaiin/third-ui/lib/seo-metadata';
+import { NProgressBar } from '@windrun-huaiin/third-ui/main';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages, setRequestLocale } from 'next-intl/server';
 import React from 'react';
+import './globals.css';
 
 export const dynamic = 'force-dynamic'
 
-export async function generateMetadata({
-  params: paramsPromise
-}: {
-  params: Promise<{ locale: string }>
-}) {
-  const { locale } = await paramsPromise;
-  return createLocalizedSiteMetadata({
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const siteMetadata = await createLocalizedSiteMetadata({
     locale,
     baseUrl: appConfig.baseUrl,
     locales: appConfig.i18n.locales,
-    defaultLocale,
-    localePrefixAsNeeded,
+    defaultLocale: appConfig.i18n.defaultLocale,
+    localePrefixAsNeeded: appConfig.i18n.localePrefixAsNeeded,
+  });
+
+  return createLocalizedPageMetadata({
+    url: {
+      locale,
+      pathname: '/',
+      baseUrl: appConfig.baseUrl,
+      locales: appConfig.i18n.locales,
+      defaultLocale: appConfig.i18n.defaultLocale,
+      localePrefixAsNeeded: appConfig.i18n.localePrefixAsNeeded,
+    },
+    site: siteMetadata,
   });
 }
 

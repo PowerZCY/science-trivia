@@ -25,7 +25,7 @@ BEGIN
   ) THEN
     CREATE ROLE sciencet_app
       LOGIN
-      PASSWORD 'qifei888sciencet_app';
+      PASSWORD 'XXXsciencet_app';
   END IF;
 END
 $$;

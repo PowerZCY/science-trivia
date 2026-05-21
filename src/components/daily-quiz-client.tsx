@@ -6,6 +6,10 @@ import confetti from "canvas-confetti";
 import { Check, ChevronRight, RotateCcw, Sparkles, X } from "lucide-react";
 import { trackGaEvent } from "@/lib/analytics";
 import type { DailyQuizPayload } from "@/lib/science-quiz";
+import {
+  createFingerprintHeaders,
+  useFingerprintContextSafe,
+} from "@windrun-huaiin/third-ui/fingerprint";
 
 type Props = {
   quiz: DailyQuizPayload | null;
@@ -179,20 +183,6 @@ function formatReportCopy(body: string, score: string) {
   return `You got ${score}. ${normalizedBody}`;
 }
 
-function getAnonymousUuid() {
-  const key = "science-trivia:anonymous-uuid";
-  const existing = window.localStorage.getItem(key);
-  if (existing) {
-    return existing;
-  }
-
-  const next = typeof crypto !== "undefined" && "randomUUID" in crypto
-    ? crypto.randomUUID()
-    : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-  window.localStorage.setItem(key, next);
-  return next;
-}
-
 function getGenerateFailReason(error: unknown): GenerateFailReason {
   if (error instanceof ScienceQuizGenerateError) {
     return error.reason;
@@ -206,6 +196,7 @@ function getGenerateFailReason(error: unknown): GenerateFailReason {
 }
 
 export function DailyQuizClient({ quiz: initialQuiz, copy, mode = "daily" }: Props) {
+  useFingerprintContextSafe();
   const finalRevealDurationMs = 1500;
   const [quiz, setQuiz] = useState<DailyQuizPayload | null>(initialQuiz);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -478,13 +469,13 @@ export function DailyQuizClient({ quiz: initialQuiz, copy, mode = "daily" }: Pro
     setGenerateError(false);
 
     try {
-      const uuid = getAnonymousUuid();
+      const fingerprintHeaders = await createFingerprintHeaders();
       const response = await fetch("/api/science-quiz/generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          ...fingerprintHeaders,
         },
-        body: JSON.stringify({ uuid }),
       });
 
       if (!response.ok) {
