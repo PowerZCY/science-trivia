@@ -6,28 +6,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  schemas  = ["dailyt", "public"]
-}
-
-model DailyQuestionSchedule {
-  id           BigInt    @id @default(autoincrement())
-  showDate     DateTime  @map("show_date") @db.Date
-  question     String    @db.Text
-  questionId   BigInt    @map("question_id")
-  questionUuid String    @map("question_uuid") @db.Uuid
-  asFirst      Int       @default(0) @map("as_first")
-  sortOrder    Int       @map("sort_order")
-  createdAt    DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt    DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
-
-  @@unique([showDate, questionId], map: "daily_question_schedule_show_date_question_id_key")
-  @@unique([showDate, questionUuid], map: "daily_question_schedule_show_date_question_uuid_key")
-  @@index([showDate], map: "idx_daily_question_schedule_show_date")
-  @@index([questionId], map: "idx_daily_question_schedule_question_id")
-  @@index([questionUuid], map: "idx_daily_question_schedule_question_uuid")
-  @@map("daily_question_schedule")
-
-  @@schema("dailyt")
+  schemas  = ["sciencet", "public"]
 }
 
 model ScienceQuestionPool {
@@ -40,7 +19,7 @@ model ScienceQuestionPool {
   @@index([enabled], map: "idx_science_question_pool_enabled")
   @@map("science_question_pool")
 
-  @@schema("dailyt")
+  @@schema("sciencet")
 }
 
 // === backend-core models ===
@@ -64,7 +43,7 @@ model User {
   @@index([fingerprintId], map: "idx_users_fingerprint_id")
   @@map("users")
 
-  @@schema("dailyt")
+  @@schema("sciencet")
 }
 
 model Subscription {
@@ -87,7 +66,7 @@ model Subscription {
   @@index([orderId], map: "idx_subscriptions_order_id")
   @@map("subscriptions")
 
-  @@schema("dailyt")
+  @@schema("sciencet")
 }
 
 model Credit {
@@ -119,7 +98,7 @@ model Credit {
   @@index([userId], map: "idx_credits_user_id")
   @@map("credits")
 
-  @@schema("dailyt")
+  @@schema("sciencet")
 }
 
 model Transaction {
@@ -163,7 +142,7 @@ model Transaction {
   @@index([userId], map: "idx_transactions_user_id")
   @@map("transactions")
 
-  @@schema("dailyt")
+  @@schema("sciencet")
 }
 
 model CreditAuditLog {
@@ -183,7 +162,7 @@ model CreditAuditLog {
   @@index([userId], map: "idx_credit_audit_log_user_id")
   @@map("credit_audit_log")
 
-  @@schema("dailyt")
+  @@schema("sciencet")
 }
 
 model UserBackup {
@@ -206,7 +185,7 @@ model UserBackup {
   @@index([originalUserId], map: "idx_user_backup_original_user_id")
   @@map("user_backup")
 
-   @@schema("dailyt")
+   @@schema("sciencet")
 }
 
 model Apilog {
@@ -220,5 +199,5 @@ model Apilog {
 
   @@map("apilog")
 
-  @@schema("dailyt")
+  @@schema("sciencet")
 }

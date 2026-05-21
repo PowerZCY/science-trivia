@@ -2,15 +2,42 @@ import "server-only";
 
 import { randomUUID } from "node:crypto";
 import { getJson, setJson, withLock } from "@windrun-huaiin/backend-core/upstash/server";
-import { getEnabledScienceQuestionIds, getQuestionsByIds, type DailyQuizPayload } from "@/lib/trivia";
+import { AnswersUniverseSdkError, createAnswersUniverseClientFromEnv } from "@windrun-huaiin/faq-sdk";
+import type { OuterQuestionBaseItemDto } from "@windrun-huaiin/faq-sdk";
+import type { Prisma } from "@app-prisma";
+import { prisma as rawPrisma } from "@/server/prisma";
 
 const QUESTIONS_PER_GROUP = 5;
 const CACHE_TTL_SECONDS = 60 * 60 * 24 * 30;
+const ENABLE_UPSTASH_CACHE = process.env.ENABLE_UPSTASH_CACHE === "true";
+
+let faqClient: ReturnType<typeof createAnswersUniverseClientFromEnv> | null = null;
+const scienceQuestionPool = (rawPrisma as typeof rawPrisma & {
+  scienceQuestionPool: Prisma.ScienceQuestionPoolDelegate;
+}).scienceQuestionPool;
 
 type ScienceQuizGroupCache = {
   version: 1;
   cursor: number;
   groups: string[][];
+};
+
+export type DailyQuizQuestion = {
+  id: string;
+  uuid: string;
+  question: string;
+  questionImageUrl?: string | null;
+  correctAnswer: string;
+  incorrectAnswers: string[];
+  explanation?: string | null;
+  category?: string | null;
+  sortOrder: number;
+};
+
+export type DailyQuizPayload = {
+  date: string;
+  dayNumber: number;
+  questions: DailyQuizQuestion[];
 };
 
 export type GeneratedScienceQuiz = {
@@ -21,11 +48,109 @@ export type GeneratedScienceQuiz = {
 };
 
 function getGroupsKey(uuid: string) {
-  return `science-trivia:user-groups:${uuid}`;
+  return `user-groups:${uuid}`;
 }
 
 function getGroupsLockKey(uuid: string) {
-  return `science-trivia:user-groups-lock:${uuid}`;
+  return `user-groups-lock:${uuid}`;
+}
+
+function isUpstashCacheEnabled() {
+  return ENABLE_UPSTASH_CACHE;
+}
+
+function getQuestionId(item: OuterQuestionBaseItemDto): string {
+  return String(item.id ?? "");
+}
+
+function normalizeQuestion(
+  item: OuterQuestionBaseItemDto,
+  sortOrder: number,
+): DailyQuizQuestion {
+  return {
+    id: String(item.id),
+    uuid: item.uuid,
+    question: item.question,
+    questionImageUrl: item.questionImageUrl ?? null,
+    correctAnswer: item.correctAnswer,
+    incorrectAnswers: item.incorrectAnswers ?? [],
+    explanation: item.explanation ?? null,
+    category: item.category ?? null,
+    sortOrder,
+  };
+}
+
+function getFaqClient() {
+  faqClient ??= createAnswersUniverseClientFromEnv();
+  return faqClient;
+}
+
+function isRecoverableQuestionProviderError(error: unknown) {
+  if (!(error instanceof AnswersUniverseSdkError)) {
+    return false;
+  }
+
+  return (
+    error.code === "REQUEST_FAILED" ||
+    error.code === "REQUEST_TIMEOUT" ||
+    (error.code === "HTTP_ERROR" && typeof error.status === "number" && error.status >= 500)
+  );
+}
+
+async function getQuestionMap(ids: string[]) {
+  if (ids.length === 0) {
+    return new Map<string, OuterQuestionBaseItemDto>();
+  }
+
+  let result: Awaited<ReturnType<ReturnType<typeof getFaqClient>["v1"]["questionsBase"]["getByIds"]>>;
+  try {
+    result = await getFaqClient().v1.questionsBase.getByIds(ids);
+  } catch (error) {
+    if (isRecoverableQuestionProviderError(error)) {
+      console.warn("[science-quiz] Question provider unavailable; rendering without question details.", error);
+      return new Map<string, OuterQuestionBaseItemDto>();
+    }
+
+    throw error;
+  }
+
+  const items = Array.isArray(result?.items) ? result.items : [];
+
+  return new Map(
+    items
+      .filter((item) => item?.id != null)
+      .map((item) => [getQuestionId(item), item]),
+  );
+}
+
+async function getQuestionsByIds(ids: string[]) {
+  const questionMap = await getQuestionMap(ids);
+  return ids
+    .map((id, index) => {
+      const question = questionMap.get(id);
+      if (!question) {
+        return null;
+      }
+
+      return normalizeQuestion(question, index + 1);
+    })
+    .filter((item): item is DailyQuizQuestion => item !== null);
+}
+
+async function getEnabledScienceQuestionIds() {
+  const rows = await scienceQuestionPool.findMany({
+    where: {
+      enabled: 1,
+    },
+    select: {
+      questionId: true,
+    },
+    orderBy: {
+      questionId: "asc",
+    },
+  });
+
+  return rows.map((item) => item.questionId.toString());
 }
 
 function shuffle<T>(items: T[]) {
@@ -117,6 +242,10 @@ async function takeFallbackQuestionIds() {
 }
 
 async function takeNextQuestionIds(uuid: string) {
+  if (!isUpstashCacheEnabled()) {
+    return takeFallbackQuestionIds();
+  }
+
   const locked = await withLock(getGroupsLockKey(uuid), 10_000, () => takeQuestionIdsFromCache(uuid));
 
   if (locked) {

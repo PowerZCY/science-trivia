@@ -1,39 +1,25 @@
 import { getTranslations } from "next-intl/server";
+import { BiweeklyFeaturedCard } from "@/components/biweekly-featured-card";
 import { DailyQuizClient } from "@/components/daily-quiz-client";
-import { WeeklyFeaturedCard } from "@/components/weekly-featured-card";
-import { getHomeTriviaData } from "@/lib/home-trivia";
+import { getLatestPublishedArchiveTopic } from "@/lib/archive-topics";
 
 export async function Hero({ locale }: { locale: string }) {
   const [t, quizT] = await Promise.all([
     getTranslations({ locale, namespace: "hero" }),
     getTranslations({ locale, namespace: "quiz" }),
   ]);
-  const { featuredTopic } = await getHomeTriviaData();
+  const featuredTopic = getLatestPublishedArchiveTopic();
 
   return (
     <section className="mx-auto mt-15 flex w-full max-w-6xl flex-col gap-5 px-4 py-3 sm:mt-15 sm:px-6 sm:py-4 lg:gap-6 lg:px-8">
       <div className="mx-auto max-w-4xl space-y-2 py-1 text-center sm:py-2">
-        <h1 className="text-3xl font-semibold tracking-tight text-slate-950 dark:text-gray-100 sm:text-4xl lg:text-5xl">
+        <h1 className="text-2xl font-semibold tracking-tight text-slate-300 dark:text-slate-300 sm:text-3xl lg:text-4xl">
           {t("title")}
         </h1>
-        <p className="mx-auto max-w-3xl text-base leading-7 text-slate-600 dark:text-gray-400 sm:text-lg sm:leading-8">
+        <p className="mx-auto max-w-3xl text-base leading-7 text-slate-500 dark:text-slate-500 sm:text-lg sm:leading-8">
           {t("description")}
         </p>
       </div>
-
-      <WeeklyFeaturedCard
-        locale={locale}
-        topic={featuredTopic}
-        copy={{
-          eyebrow: t("featured.eyebrow"),
-          title: t("featured.highlightsTitle"),
-          description: t("featured.description"),
-          readMore: t("featured.readMore"),
-          archive: t("featured.archive"),
-          emptyTitle: t("featured.emptyTitle"),
-          emptyDescription: t("featured.emptyDescription"),
-        }}
-      />
 
       <div id="science-quiz">
         <DailyQuizClient
@@ -58,7 +44,6 @@ export async function Hero({ locale }: { locale: string }) {
             showWrongOnly: quizT("report.showWrongOnly"),
             showAll: quizT("report.showAll"),
             share: quizT("report.share"),
-            copied: quizT("report.copied"),
             retry: quizT("report.retry"),
             generateTitle: quizT("generate.title"),
             generateDescription: quizT("generate.description"),
@@ -68,6 +53,18 @@ export async function Hero({ locale }: { locale: string }) {
           }}
         />
       </div>
+
+      <BiweeklyFeaturedCard
+        locale={locale}
+        topic={featuredTopic}
+        copy={{
+          eyebrow: t("featured.eyebrow"),
+          readMore: t("featured.readMore"),
+          archive: t("featured.archive"),
+          emptyTitle: t("featured.emptyTitle"),
+          emptyDescription: t("featured.emptyDescription"),
+        }}
+      />
     </section>
   );
 }

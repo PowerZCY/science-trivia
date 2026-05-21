@@ -3,20 +3,20 @@
     "title": "Science Trivia",
     "banner": "",
     "webTitle": "Science Trivia Questions and Answers | Free Online Science Quiz",
-    "webDescription": "Generate five science trivia questions, check clear answers and explanations, and explore weekly science topics built from surprising science facts.",
+    "webDescription": "Generate five science trivia questions, check clear answers and explanations, and explore biweekly science topics built from surprising science facts.",
     "keywords": "science trivia, science trivia questions, science quiz, science questions and answers, science trivia questions and answers, free online science quiz, science quiz with answers, science trivia archive"
   },
   "hero": {
-    "title": "Science Trivia for Curious Minds",
-    "description": "Generate five science questions, then follow a weekly theme that turns surprising facts into deeper understanding.",
+    "title": "Science Trivia Questions That Spark Curiosity",
+    "description": "Play five quick science trivia questions, check clear answers, and explore surprising themes that turn fun facts into real understanding.",
     "featured": {
-      "eyebrow": "Weekly featured",
+      "eyebrow": "Biweekly Feature",
       "highlightsTitle": "Key ideas",
-      "description": "Each weekly theme starts from a strong science trivia question and expands it into connected facts worth remembering.",
+      "description": "Each biweekly theme starts from a strong science trivia question and expands it into connected facts worth remembering.",
       "readMore": "Read more",
       "archive": "Archive",
-      "emptyTitle": "Weekly Science Trivia is not ready yet.",
-      "emptyDescription": "The first weekly theme has not been published. Check back soon for the archive."
+      "emptyTitle": "Biweekly Science Trivia is not ready yet.",
+      "emptyDescription": "The first biweekly theme has not been published. Check back soon for the archive."
     }
   },
   "quiz": {
@@ -40,16 +40,15 @@
       "reviewTitle": "Question review",
       "showWrongOnly": "Show wrong only",
       "showAll": "Show all",
-      "share": "Share",
-      "copied": "Copied",
-      "retry": "Retry"
+      "share": "New Quiz",
+      "retry": "Play Again"
     },
     "generate": {
-      "title": "Generate five science questions",
-      "description": "Start a fresh set pulled from the science question pool. Each cached round uses a new group of five questions.",
-      "button": "Generate questions",
-      "generating": "Generating...",
-      "error": "We could not generate questions right now. Please try again."
+      "title": "Ready for a challenge?",
+      "description": "Answer 5 quick science questions, then review the correct answers with clear explanations. Tap start when you are ready to play.",
+      "button": "Start Quiz",
+      "generating": "Preparing your quiz...",
+      "error": "We could not start the challenge right now. Please try again."
     }
   },
   "archive": {},
@@ -261,8 +260,8 @@
     "terms": "Terms of Service",
     "dpa": "Data Protection Agreement",
     "sitemap": "Sitemap",
-    "contactUs": "Contact Us",
-    "email": "support@science-trivia.org",
+    "contactUs": "",
+    "email": "",
     "clickToCopyText": "Click to copy",
     "copiedText": "Copied!",
     "thanks": "Thanks to"

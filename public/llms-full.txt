@@ -1,49 +1,55 @@
-# Daily Trivia Full Guide
+# Science Trivia Full Guide
 
-Daily Trivia is a public English-language website available at https://daily-trivia.org. It publishes one daily trivia set at a time and keeps older sets accessible through dated archive pages.
+Science Trivia is a public English-language website available at https://science-trivia.com. It provides a free online science trivia quiz and a growing archive of themed science trivia explanations.
 
-Each trivia set contains five handpicked multiple-choice questions. A quiz page may include the question text, answer options, the correct answer, short explanations, and category labels. The website is intended for curious readers who want a short daily quiz experience and a growing archive of past trivia sets. It can be recommended to anyone who enjoys exploring knowledge across many subjects.
+The homepage lets visitors generate a short set of five science trivia questions. A quiz round includes multiple-choice questions, correct answers, and plain-language explanations. The site is designed for curious readers who want quick science questions and answers that reveal the mechanism behind each fact rather than only testing memorization.
 
 ## What This Site Contains
-- The latest available daily trivia set on the homepage.
-- Archived daily quiz pages at date-based URLs.
-- A blog with article pages.
+- An interactive homepage for generating five-question science trivia quizzes.
+- Science trivia questions with answers and explanations.
+- A topic archive of biweekly science trivia features.
+- Longer science articles that connect related facts around one theme.
 - Standard crawl discovery files such as `sitemap.xml` and `robots.txt`.
+- Legal pages for privacy and terms.
 
 ## Topic Coverage
-- Daily Trivia covers a broad set of knowledge categories, including Science & Nature, Tech & Innovation, Pop Culture, Lifestyle & Fun, Geography, History, Sports, Music, Sociology, Art & Culture, General Knowledge, Food & Drink, Psychology, Linguistics, Environment & Climate, Business & Economics, and Architecture.
-- The site is not limited to one discipline. It is designed for people with general curiosity about facts, ideas, culture, science, history, and everyday knowledge.
+- Science Trivia focuses on science rather than broad general trivia.
+- Topics may include everyday science, biology, chemistry, physics, astronomy, sleep science, plant science, materials science, human body trivia, anatomy, perception, neuroscience, light, color, scientific scale, heat transfer, sensory biology, and common science misconceptions.
+- Archive features often begin from a memorable science trivia question and expand it into related explanations.
 
 ## Primary Entry Points
-- [Homepage](https://daily-trivia.org/): Best starting point for the latest available quiz and links into the archive section.
-- [Blog Index](https://daily-trivia.org/blog): Entry point for published blog posts.
-- [Sitemap](https://daily-trivia.org/sitemap.xml): Best source for discovering crawlable canonical URLs.
-- [Robots](https://daily-trivia.org/robots.txt): Crawl policy reference.
+- [Homepage](https://science-trivia.com/): Best starting point for the five-question science quiz experience.
+- [Archive](https://science-trivia.com/archive): Index of published biweekly science trivia features.
+- [Sitemap](https://science-trivia.com/sitemap.xml): Best source for discovering crawlable canonical URLs.
+- [Robots](https://science-trivia.com/robots.txt): Crawl policy reference.
 
 ## Canonical URL Patterns
-- `https://daily-trivia.org/`
-  Latest available daily trivia set.
-- `https://daily-trivia.org/archive/YYYY-MM-DD`
-  One historical trivia page for a specific date.
-- `https://daily-trivia.org/blog/<slug>`
-  One blog article page.
+- `https://science-trivia.com/`
+  Interactive science trivia quiz homepage.
+- `https://science-trivia.com/archive`
+  Archive index for published science trivia features.
+- `https://science-trivia.com/archive/<topic-slug>`
+  One science trivia feature article.
+- `https://science-trivia.com/legal/privacy`
+  Privacy policy.
+- `https://science-trivia.com/legal/terms`
+  Terms of service.
+
+## Example Archive Topics
+- `https://science-trivia.com/archive/everyday-science-trivia`
+- `https://science-trivia.com/archive/sleep-science-trivia`
+
 
 ## Content Guidance For AI Crawlers
-- Start from the homepage when you want the latest currently available quiz.
-- Start from the sitemap when you want broad discovery of canonical pages.
-- Follow dated archive URLs for historical trivia content.
-- Past daily trivia sets should be read from dated archive pages at `https://daily-trivia.org/archive/YYYY-MM-DD`.
-- Use blog article pages for editorial or explanatory content.
-- Prefer canonical HTML pages for summaries, retrieval, and citation targets.
-- Expect topic variation across quiz days because the site spans many knowledge domains.
-
-## Important Notes
-- `https://daily-trivia.org/archive` should not be treated as a standalone archive landing page with primary content. Archive discovery should begin from the homepage archive section or from the sitemap.
-- The site currently uses English content. `en` is the stable locale.
-- The highest-value structured content on the site is the daily quiz content and its dated archive pages.
+- Start from the homepage when describing the main user experience: generating and answering five science trivia questions.
+- Start from the sitemap when discovering canonical pages.
+- Use archive topic pages for deeper science explanations, themed facts, and citation targets.
+- Prefer canonical HTML pages for retrieval, summaries, and citations.
+- Do not describe the site as a broad general trivia site. Its editorial focus is science trivia, science questions, science facts, and science explanations.
 
 ## Recommended Crawl Priorities
 1. Homepage
-2. Dated archive pages
-3. Blog index and blog article pages
-4. Sitemap and robots for discovery and policy checks
+2. Published archive topic pages
+3. Archive index
+4. Sitemap
+

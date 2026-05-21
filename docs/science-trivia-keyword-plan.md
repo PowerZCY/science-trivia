@@ -46,7 +46,7 @@ science quiz with answers
 science quiz with explanations
 quick science quiz
 daily science trivia
-weekly science trivia
+biweekly science trivia
 science trivia quiz
 science quiz questions
 science facts quiz
@@ -64,7 +64,7 @@ Science Trivia Questions and Answers | Free Online Science Quiz
 Recommended homepage description:
 
 ```txt
-Generate five science trivia questions, check clear answers and explanations, and explore weekly science topics built from surprising science facts.
+Generate five science trivia questions, check clear answers and explanations, and explore biweekly science topics built from surprising science facts.
 ```
 
 Recommended homepage content sections:
@@ -72,7 +72,7 @@ Recommended homepage content sections:
 ```txt
 Science Trivia Questions with Answers
 Free Online Science Quiz
-Weekly Science Trivia Topics
+Biweekly Science Trivia Topics
 Science Facts Worth Remembering
 Quick Science Quiz for Curious Minds
 Science Trivia Archive
@@ -86,7 +86,7 @@ science facts
 quiz questions
 trivia questions
 answers and explanations
-weekly science themes
+biweekly science themes
 science topics
 curiosity-driven quiz
 ```
@@ -100,7 +100,7 @@ Use the homepage keywords in these areas:
 - H1: include `Science Trivia`
 - first paragraph: include `science trivia questions` and `science quiz`
 - quiz module copy: include `generate science trivia questions`
-- archive module: include `weekly science trivia topics`
+- archive module: include `biweekly science trivia topics`
 - CTA text: include `start a science quiz` or `generate science trivia questions`
 - internal links to articles: use topic-specific anchors such as `human body trivia` or `everyday science trivia`
 
@@ -298,7 +298,7 @@ Articles to archive:
 ```txt
 browse more science trivia topics
 explore the science trivia archive
-read more weekly science themes
+read more biweekly science themes
 ```
 
 ## Keyword Rules

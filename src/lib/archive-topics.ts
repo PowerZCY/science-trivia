@@ -7,8 +7,8 @@ export type ArchiveTopic = {
   title: string;
   description: string;
   publishDate: string;
-  weekStart: string;
-  weekNumber: number;
+  issueStartDate: string;
+  issueNumber: number;
   status: ArchiveTopicStatus;
   primaryQuestionId: string;
   supportingQuestionIds: string[];
@@ -23,8 +23,8 @@ export const archiveTopics = [
     description:
       "Explore cilantro, stale bread, cold metal, awful orange juice, wet towels, and soap: familiar moments explained by hidden chemistry, heat transfer, and sensory biology.",
     publishDate: "2026-05-04",
-    weekStart: "2026-05-04",
-    weekNumber: 1,
+    issueStartDate: "2026-05-04",
+    issueNumber: 1,
     status: "published",
     primaryQuestionId: "10054",
     supportingQuestionIds: ["10017", "10155", "10221", "10395", "10662"],
@@ -41,8 +41,8 @@ export const archiveTopics = [
     description:
       "Sleep science trivia about blue light, circadian rhythms, adenosine, caffeine naps, hypnagogic hallucinations, and REM muscle paralysis — the biology behind why sleep is harder than it should be.",
     publishDate: "2026-05-18",
-    weekStart: "2026-05-18",
-    weekNumber: 3,
+    issueStartDate: "2026-05-18",
+    issueNumber: 2,
     status: "published",
     primaryQuestionId: "10242",
     supportingQuestionIds: ["10573", "10503", "10180", "10618", "10732"],
@@ -58,9 +58,9 @@ export const archiveTopics = [
     title: "Human Body Trivia: Smell, Memory, Pain, Balance, and Brain Freeze",
     description:
       "Follow smell, memory, pain, balance, brain freeze, phosphenes, pins and needles, and wrinkled fingers through the hidden systems behind familiar sensations.",
-    publishDate: "2026-05-11",
-    weekStart: "2026-05-11",
-    weekNumber: 2,
+    publishDate: "2026-06-01",
+    issueStartDate: "2026-06-01",
+    issueNumber: 3,
     status: "published",
     primaryQuestionId: "10308",
     supportingQuestionIds: ["10031", "10073", "10246", "10279", "10636", "10400"],
@@ -76,9 +76,9 @@ export const archiveTopics = [
     title: "Plant Science Trivia: How Plants Decide Without a Brain",
     description:
       "Plant science trivia about Venus flytraps counting, bamboo timing blooms across continents, grass sending chemical alarms, autumn color changes, climbing strategies, fire-triggered seeds, and waxy pine needles.",
-    publishDate: "2026-05-25",
-    weekStart: "2026-05-25",
-    weekNumber: 4,
+    publishDate: "2026-06-15",
+    issueStartDate: "2026-06-15",
+    issueNumber: 4,
     status: "published",
     primaryQuestionId: "10210",
     supportingQuestionIds: ["10283", "10059", "10407", "10665", "10392", "10626"],
@@ -94,9 +94,9 @@ export const archiveTopics = [
     title: "Scale Science Trivia: Why Size, Speed, and Quantity Break Human Intuition",
     description:
       "Explore scale science trivia about paper folding to the Moon, floating Saturn, cloud weight, lightning temperature, neutron stars, and why exponential growth defeats the human brain.",
-    publishDate: "2026-06-01",
-    weekStart: "2026-06-01",
-    weekNumber: 5,
+    publishDate: "2026-06-29",
+    issueStartDate: "2026-06-29",
+    issueNumber: 5,
     status: "published",
     primaryQuestionId: "10265",
     supportingQuestionIds: ["10056", "10160", "10382", "10184", "10425", "10396"],
@@ -112,9 +112,9 @@ export const archiveTopics = [
     title: "Light and Color Science Trivia: Why Nothing Looks the Way You Think",
     description:
       "A light and color science trivia guide about the sun's true color, Martian blue sunsets, Rayleigh scattering, human bioluminescence, circular rainbows, sonoluminescence, and Lichtenberg figures.",
-    publishDate: "2026-06-08",
-    weekStart: "2026-06-08",
-    weekNumber: 6,
+    publishDate: "2026-07-13",
+    issueStartDate: "2026-07-13",
+    issueNumber: 6,
     status: "published",
     primaryQuestionId: "10222",
     supportingQuestionIds: ["10138", "10014", "10459", "10572", "10708", "10540"],
@@ -130,9 +130,9 @@ export const archiveTopics = [
     title: "Body Design Science Trivia: The Strange Architecture of Being Human",
     description:
       "Body design science trivia about twin fingerprints, baby bones fusing, foot architecture, the smallest bone, corneal oxygen, liver regeneration, spleen removal, and why skin is your largest organ.",
-    publishDate: "2026-06-15",
-    weekStart: "2026-06-15",
-    weekNumber: 7,
+    publishDate: "2026-07-27",
+    issueStartDate: "2026-07-27",
+    issueNumber: 7,
     status: "published",
     primaryQuestionId: "10302",
     supportingQuestionIds: ["10426", "10280", "10291", "10398", "10269", "10327", "10158"],
@@ -148,9 +148,9 @@ export const archiveTopics = [
     title: "Extreme Materials Science Trivia: What Happens When Ordinary Stuff Meets Extraordinary Conditions",
     description:
       "Extreme materials science trivia about lightning glass, the Leidenfrost effect, floating pumice, Roman concrete that strengthens in seawater, pottery glaze as glass, and why lightning zigzags.",
-    publishDate: "2026-06-22",
-    weekStart: "2026-06-22",
-    weekNumber: 8,
+    publishDate: "2026-08-10",
+    issueStartDate: "2026-08-10",
+    issueNumber: 8,
     status: "published",
     primaryQuestionId: "10060",
     supportingQuestionIds: ["10681", "10170", "10343", "10671", "10390"],
@@ -166,9 +166,9 @@ export const archiveTopics = [
     title: "Brain Tricks Science Trivia: How Your Brain Edits Reality Before You Notice",
     description:
       "Brain tricks science trivia about blind spots, bland food, spicy nose, fizzy burn, voice recordings, dopamine prediction, childhood amnesia, dizziness, and garlic breath from your lungs.",
-    publishDate: "2026-06-29",
-    weekStart: "2026-06-29",
-    weekNumber: 9,
+    publishDate: "2026-08-24",
+    issueStartDate: "2026-08-24",
+    issueNumber: 9,
     status: "published",
     primaryQuestionId: "10329",
     supportingQuestionIds: ["10046", "10190", "10323", "10397", "10427", "10386", "10716", "10553"],

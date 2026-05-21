@@ -6,7 +6,7 @@
 
 当前目标不是简单替换站点名称，而是把产品拆成两条稳定能力：
 
-- 每周精选 Science 主题文章，用 archive 页面沉淀长期内容价值
+- 双周一期 Science 主题文章，用 archive 页面沉淀长期内容价值
 - 随机生成 5 道 Science Trivia 题，用缓存为每个用户维持短期内不重复的答题体验
 
 本文只描述已确认方案。未确认或后续可优化的方向会明确标记。
@@ -49,7 +49,8 @@ export const archiveTopics = [
   {
     slug: "everyday-science-trivia",
     publishDate: "2026-05-04",
-    weekStart: "2026-05-04",
+    issueStartDate: "2026-05-04",
+    issueNumber: 1,
     status: "published",
     primaryQuestionId: "10017",
     supportingQuestionIds: ["10155", "10221", "10395", "10662"],
@@ -59,25 +60,27 @@ export const archiveTopics = [
 
 首页和 archive 聚合页都从该配置读取发布状态。
 
-### 每周发布规则
+### 双周发布规则
 
-第一周从 `2026-05-04T00:00:00Z` 开始。
+第 1 期从 `2026-05-04T00:00:00Z` 开始。
 
-采用每周一 UTC+0 发布：
+采用每两周一次、周一 UTC+0 发布：
 
-- 第 1 周：2026-05-04 00:00 UTC
-- 第 2 周：2026-05-11 00:00 UTC
-- 第 3 周：2026-05-18 00:00 UTC
+- 第 1 期：2026-05-04 00:00 UTC
+- 第 2 期：2026-05-18 00:00 UTC
+- 第 3 期：2026-06-01 00:00 UTC
 
 说明：
 
 - 美国常见日历习惯是周日作为一周第一天
 - 英国与 ISO 8601 更常见周一作为一周第一天
-- 本项目采用 UTC+0 + 周一发布，便于全球用户与服务端计算保持一致
+- 本项目采用 UTC+0 + 隔周周一发布，便于全球用户与服务端计算保持一致
+- `issueNumber` 表示第几期文章，不表示日历周编号
+- `issueStartDate` 表示该期开始日期，通常与 `publishDate` 一致
 
 展示规则：
 
-- 首页 Weekly Featured 只展示 `publishDate <= now(UTC)` 的最新一期
+- 首页 Featured Issue 只展示 `publishDate <= now(UTC)` 的最新一期
 - `/archive` 聚合页只展示已发布文章
 - 未到发布时间的文章可以提前存在于仓库，但不在首页、聚合页和 sitemap 中展示
 
@@ -88,11 +91,11 @@ export const archiveTopics = [
 - 实现时优先让未发布内容也不能通过直接 URL 访问；如果 Fuma 默认静态参数生成机制不方便过滤，则至少要在页面层按 `archiveTopics` 判断并返回 `notFound()`
 - 这项属于实现阶段重点验证项
 
-## 每周精选内容策略
+## 双周主题内容策略
 
 ### 文章定位
 
-每篇 weekly article 不是单题长答案，而是一篇由多道题共同支撑的 Science 主题文章。
+每篇 issue article 不是单题长答案，而是一篇由多道题共同支撑的 Science 主题文章。
 
 写作目标：
 
@@ -107,7 +110,7 @@ export const archiveTopics = [
 
 - 同一道题可以在不同文章中服务不同角度
 - 同一篇文章内部不重复使用同一道题
-- `primaryQuestionId` 尽量不要跨文章重复，保证每周主入口新鲜
+- `primaryQuestionId` 尽量不要跨文章重复，保证每期主入口新鲜
 - `supportingQuestionIds` 可以跨主题重复
 
 ### 主题抽象流程
@@ -221,7 +224,7 @@ supportingQuestionIds:
 
 ### Archive 页面体验
 
-`/archive` 聚合页承载 weekly articles 列表。
+`/archive` 聚合页承载 biweekly issue articles 列表。
 
 保留 Fuma `index.mdx` 作为 archive 正文入口：
 
@@ -234,7 +237,7 @@ supportingQuestionIds:
 
 - 移动端单列
 - 桌面端保持纵向列表或清晰分组，不做松散卡片墙
-- 每张卡片展示发布日期、周次、标题、摘要和主题标签
+- 每张卡片展示发布日期、期数、标题、摘要和主题标签
 - 卡片点击进入对应 MDX 文章
 - 首页只展示最新一期精选卡片，并提供 archive 按钮进入 `/archive`
 
@@ -379,7 +382,7 @@ POST /api/science-quiz/generate
 首页结构：
 
 1. 标题区
-2. Weekly Featured 最新一期精选内容卡片
+2. Featured Issue 最新一期精选内容卡片
 3. 随机 5 题生成与答题模块
 
 首页不再展示题目列表模块。
@@ -392,7 +395,7 @@ POST /api/science-quiz/generate
 
 - H1
 - 首页说明文案
-- Weekly Featured 标题、摘要、精华点
+- Featured Issue 标题、摘要、精华点
 - archive 按钮文案
 - 随机答题模块的静态标题与说明文案
 
@@ -408,10 +411,70 @@ POST /api/science-quiz/generate
 
 - archive 页面标题与说明
 - 已发布文章列表
-- 每篇文章的标题、摘要、发布日期、周次、主题标签
+- 每篇文章的标题、摘要、发布日期、期数、主题标签
 - 指向文章详情的链接
 
 客户端组件只用于必要的交互增强，不承担主要 SEO 文案输出。
+
+## Analytics 埋点规则
+
+当前 Science Trivia 只保留和随机答题、archive 点击直接相关的 GA 事件。
+
+事件命名规则：
+
+- 使用现在时，不使用过去时
+- 不沿用旧的 `daily_quiz_*` 事件名
+- 不传通用参数，如 `quiz_mode`、`quiz_id`、`question_count`、`locale`、`source`
+- `source` 只用于生成失败事件，用来区分失败入口
+
+已确认事件：
+
+```ts
+science_quiz_generate_start: {}
+
+science_quiz_generate_fail: {
+  source: "home_start" | "report_new";
+  reason: "http_error" | "empty_quiz" | "network_error" | "unknown";
+}
+
+science_quiz_new_click: {}
+
+science_quiz_complete: {
+  score: number;
+}
+
+science_quiz_retry_click: {
+  score: number;
+}
+
+science_archivepage_card_click: {
+  issue_number: number;
+}
+
+science_readmore_click: {
+  issue_number: number;
+}
+
+science_readarchive_click: {}
+```
+
+触发规则：
+
+- `science_quiz_generate_start`：首页初始状态点击生成题目按钮时触发
+- `science_quiz_generate_fail`：生成题目请求失败或返回无效题目时触发
+- `science_quiz_new_click`：报告页点击生成新 quiz 时触发
+- `science_quiz_complete`：最后一题答完并完成本轮 quiz 时触发
+- `science_quiz_retry_click`：报告页点击 retry 当前 quiz 时触发
+- `science_archivepage_card_click`：`/archive` 聚合页点击文章卡片时触发
+- `science_readmore_click`：首页 Featured Issue 卡片点击 read more 时触发
+- `science_readarchive_click`：首页 Featured Issue 卡片点击 archive 时触发
+
+生成失败原因分类：
+
+- `http_error`：`POST /api/science-quiz/generate` 返回非 2xx
+- `empty_quiz`：接口返回成功，但没有有效的 `quiz.questions`
+- `network_error`：浏览器 `fetch` 抛出网络类错误
+- `unknown`：其他未归类错误
 
 ## 开发计划
 
@@ -425,11 +488,11 @@ POST /api/science-quiz/generate
 - 修改 `next.config.ts` output tracing，补充 archive 路由
 - 确认 `/blog` 不再可访问
 
-### 阶段 2：Weekly 内容配置与页面展示
+### 阶段 2：双周内容配置与页面展示
 
 - 新增 `src/lib/archive-topics.ts`
 - 设计 published topic 过滤函数
-- 首页新增 Weekly Featured 卡片
+- 首页新增 Featured Issue 卡片
 - `/archive` 聚合页保留 Fuma `index.mdx` 作为正文入口，并按 `archiveTopics` 服务端展示已发布文章
 - 保留 MDX 正文由 Fuma page 渲染
 - 移除首页旧题目列表模块
@@ -482,7 +545,7 @@ POST /api/science-quiz/generate
 ### 阶段 8：验证与收尾
 
 - 运行 lint/build
-- 验证 `/archive`、文章详情、首页 Weekly 卡片
+- 验证 `/archive`、文章详情、首页 Featured Issue 卡片
 - 验证随机生成题目 API
 - 验证 Redis 正常与 Redis 降级路径
 - 验证 sitemap 不再包含 `/blog`

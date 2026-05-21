@@ -5,11 +5,17 @@ import { ArchiveHomeClient } from './archive-home-client';
 
 const sourceKey = 'archive';
 
+function getTodayUtcDate() {
+  return new Date().toISOString().slice(0, 10);
+}
+
 export type ArchiveHomeItem = {
   title: string;
+  cardTitle?: string;
   description?: string;
   date?: string;
-  author?: string;
+  publishDate?: string;
+  issueNumber?: number;
   tags?: string[];
   href: string;
 };
@@ -20,6 +26,7 @@ export async function buildArchiveHomeItems(locale: string) {
     slug: string[];
     locale: string;
   }>;
+  const today = getTodayUtcDate();
 
   return entries
     .filter(({ locale: entryLocale }) => entryLocale === locale)
@@ -30,11 +37,24 @@ export async function buildArchiveHomeItems(locale: string) {
         return null;
       }
 
+      const publishDate =
+        typeof page.data.publishDate === 'string'
+          ? page.data.publishDate
+          : typeof page.data.date === 'string'
+            ? page.data.date
+            : undefined;
+
+      if (!publishDate || publishDate > today) {
+        return null;
+      }
+
       return {
         title: page.data.title ?? slug.join('/'),
+        cardTitle: typeof page.data.cardTitle === 'string' ? page.data.cardTitle : undefined,
         description: page.data.description,
         date: typeof page.data.date === 'string' ? page.data.date : undefined,
-        author: typeof page.data.author === 'string' ? page.data.author : undefined,
+        publishDate,
+        issueNumber: typeof page.data.issueNumber === 'number' ? page.data.issueNumber : undefined,
         tags: Array.isArray(page.data.tags)
           ? page.data.tags.filter((item): item is string => typeof item === 'string' && item.trim() !== '')
           : undefined,
@@ -48,8 +68,8 @@ export async function buildArchiveHomeItems(locale: string) {
     })
     .filter((item): item is NonNullable<typeof item> => item != null)
     .sort((a, b) => {
-      const aTime = a.date ? Date.parse(a.date) : 0;
-      const bTime = b.date ? Date.parse(b.date) : 0;
+      const aTime = a.publishDate ? Date.parse(a.publishDate) : 0;
+      const bTime = b.publishDate ? Date.parse(b.publishDate) : 0;
       return bTime - aTime;
     });
 }

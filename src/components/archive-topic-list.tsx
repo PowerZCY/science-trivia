@@ -13,7 +13,7 @@ export function ArchiveTopicList({ locale, topics }: Props) {
     <section className="mx-auto mt-8 w-full max-w-4xl px-0 pb-10">
       <div className="mb-4 rounded-[1.4rem] border border-white/70 bg-white/45 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.65)] backdrop-blur-xl">
         <h2 className="text-2xl font-semibold tracking-tight text-slate-950 sm:text-3xl">
-          Weekly Science Archive
+          Biweekly Science Archive
         </h2>
         <p className="mt-2 text-sm leading-7 text-slate-600 sm:text-base">
           Browse published Science Trivia themes, each built from a small cluster of questions around one
@@ -35,7 +35,7 @@ export function ArchiveTopicList({ locale, topics }: Props) {
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                   <p className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 sm:text-base">
                     <CalendarDays className="h-4 w-4" />
-                    <span>Week {topic.weekNumber}</span>
+                    <span>Issue {topic.issueNumber}</span>
                     <span className="text-xs tracking-[0.08em] text-slate-400 sm:text-sm">
                       {topic.publishDate}
                     </span>

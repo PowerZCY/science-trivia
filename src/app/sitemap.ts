@@ -3,7 +3,7 @@ import path from "node:path";
 import type { MetadataRoute } from "next";
 import { getAsNeededLocalizedUrl } from "@windrun-huaiin/lib/utils";
 import { appConfig, defaultLocale, localePrefixAsNeeded } from "@/lib/appConfig";
-import { isValidTriviaDate } from "@/lib/trivia";
+import { getPublishedArchiveTopicBySlug } from "@/lib/archive-topics";
 import { resolveMdxSourceDir } from "@/lib/mdx-source";
 
 export const revalidate = 86_400;
@@ -25,13 +25,22 @@ function getLocalizedRoute(locale: string, route: string) {
   return getAsNeededLocalizedUrl(locale, route, localePrefixAsNeeded, defaultLocale);
 }
 
+function isValidDate(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return false;
+  }
+
+  const parsed = new Date(`${value}T00:00:00.000Z`);
+  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
+}
+
 function normalizeFrontmatterDate(value: string | undefined) {
   if (!value) {
     return undefined;
   }
 
   const trimmed = value.trim();
-  return isValidTriviaDate(trimmed) ? trimmed : undefined;
+  return isValidDate(trimmed) ? trimmed : undefined;
 }
 
 function extractFrontmatterDate(content: string) {
@@ -49,6 +58,7 @@ function getMdxRoutesFromDirectory(
   baseRoute: string,
   defaultChangeFrequency: SitemapEntry["changeFrequency"],
   defaultPriority: number,
+  shouldIncludeSlug?: (slug: string) => boolean,
 ) {
   if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) {
     return [] as MdxRoute[];
@@ -57,6 +67,10 @@ function getMdxRoutesFromDirectory(
   return fs
     .readdirSync(dir, { withFileTypes: true })
     .filter((entry) => entry.isFile() && entry.name.endsWith(".mdx"))
+    .filter((entry) => {
+      const slug = entry.name.replace(/\.mdx$/, "");
+      return shouldIncludeSlug ? shouldIncludeSlug(slug) : true;
+    })
     .map((entry) => {
       const slug = entry.name.replace(/\.mdx$/, "");
       const filePath = path.join(dir, entry.name);
@@ -99,6 +113,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/archive",
     "monthly",
     0.8,
+    (slug) => slug === "index" || getPublishedArchiveTopicBySlug(slug) !== null,
   );
 
   const legalRoutes = getMdxRoutesFromDirectory(
