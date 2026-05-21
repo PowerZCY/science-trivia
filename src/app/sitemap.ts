@@ -3,7 +3,7 @@ import path from "node:path";
 import type { MetadataRoute } from "next";
 import { getAsNeededLocalizedUrl } from "@windrun-huaiin/lib/utils";
 import { appConfig, defaultLocale, localePrefixAsNeeded } from "@/lib/appConfig";
-import { getPublishedArchiveTopicBySlug } from "@/lib/archive-topics";
+import { getLatestPublishedArchiveTopic, getPublishedArchiveTopicBySlug } from "@/lib/archive-topics";
 import { resolveMdxSourceDir } from "@/lib/mdx-source";
 
 export const revalidate = 86_400;
@@ -104,8 +104,14 @@ function buildLocalizedEntries(
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const latestPublishedArchiveTopic = getLatestPublishedArchiveTopic();
   const staticRoutes = [
-    { route: "/", changeFrequency: "daily" as const, priority: 1 }
+    {
+      route: "/",
+      lastModified: latestPublishedArchiveTopic?.publishDate,
+      changeFrequency: "weekly" as const,
+      priority: 1,
+    },
   ];
 
   const archiveRoutes = getMdxRoutesFromDirectory(
@@ -126,6 +132,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...staticRoutes.flatMap((route) =>
       buildLocalizedEntries(route.route, {
+        lastModified: route.lastModified,
         changeFrequency: route.changeFrequency,
         priority: route.priority,
       }),
