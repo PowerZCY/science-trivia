@@ -5,6 +5,7 @@ import { showBanner, localePrefixAsNeeded, defaultLocale } from '@/lib/appConfig
 import { fingerprintConfig } from '@windrun-huaiin/backend-core/config/fingerprint';
 import { FingerprintProvider } from '@windrun-huaiin/third-ui/fingerprint';
 import { SiteHomeLayout, type SiteHomeLayoutConfig } from '@windrun-huaiin/third-ui/fuma/base/site-home-layout';
+import { GoogleAnalyticsScript, MicrosoftClarityScript } from "@windrun-huaiin/base-ui/components/server";
 import type { ReactNode } from 'react';
 
 async function homeOptions(locale: string): Promise<SiteHomeLayoutConfig> {
@@ -52,6 +53,8 @@ export default async function Layout({
         }}
       >
         {children}
+        <GoogleAnalyticsScript />
+        <MicrosoftClarityScript />
       </SiteHomeLayout>
     </FingerprintProvider>
   );
